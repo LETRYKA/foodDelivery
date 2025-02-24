@@ -10,5 +10,3 @@ usersRouter.get("/:id", authorize, getUser); // Get User Details
 usersRouter.post("/", getUsers); // Create New User
 usersRouter.put("/:id", getUsers); // Update User
 usersRouter.delete("/:id", getUsers); // Delete User
-
-// HELLO
