@@ -1,14 +1,10 @@
-import fs from "fs";
+import User from "../../models/user_schema.js"
 
-export const getUsers = (req, res) => {
-  const rawUserData = fs.readFileSync(`src/db/users.json`);
-  const users = JSON.parse(rawUserData);
-  const token = req.headers.authorization.split(" ")[1];
-
+export const getUsers = async (req, res, next) => {
   try {
-    const user = users.find((user) => user.id === req.user.user);
-    res.send(user);
-  } catch {
-    res.send("Something went wrong");
+    const users = await User.find();
+    res.status(200).json({ success: true, data: users })
+  } catch (err) {
+    next(err)
   }
 };

@@ -1,23 +1,31 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-dotenv.config();
+import jwt from 'jsonwebtoken'
+import { TOKEN_SECRET } from '../../config/env.js';
+import User from '../models/user_schema.js';
 
-const app = express();
-app.use(express.json());
+export const authorize = async (req, res, next) => {
+  try {
+    let token;
 
-const users = [];
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
+    }
 
-export const authenticateJWT = (req, res, next) => {
-  const token = req.header("Authorization")?.split(" ")[1];
-  if (!token) {
-    return res.status(403).send("Access denied");
-  }
+    if (!token) {
+      return res.status(401).json({ message: 'Unauthorized' })
+    }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).send("Invalid token");
+    const decoded = jwt.verify(token, TOKEN_SECRET)
+    const user = await User.findById(decoded.userId);
+
+    if (!user) {
+      return res.status(401).json({ message: 'Unauthorized' })
+    }
+
     req.user = user;
     next();
-  });
-};
+
+  }
+  catch (err) {
+    return res.status(401).json({ message: 'Unauthorized', error: err.message })
+  }
+}
