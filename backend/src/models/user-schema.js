@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Order from "./order-schema";
 
 const userSchema = new mongoose.Schema(
   {
@@ -28,7 +29,6 @@ const userSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      required: [false],
     },
     role: {
       type: String,
@@ -42,6 +42,12 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+userSchema.virtual("orders", {
+  ref: "Order",
+  localField: "_id",
+  foreignField: "user",
+});
 
 const User = mongoose.model("User", userSchema);
 
