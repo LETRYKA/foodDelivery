@@ -1,6 +1,7 @@
 import connectToDatabase from "../database/mongodb.js";
 import { usersRouter } from "./routes/users.routes.js";
-import { authRouter } from "./routes/auth.routes.js"
+import { authRouter } from "./routes/auth.routes.js";
+import { foodRouter } from "./routes/food.routes.js";
 import mongoose from "mongoose";
 import express from "express";
 import cors from "cors";
@@ -13,11 +14,11 @@ mongoose.connect(process.env.MONGODB_STRING);
 
 app.use(express.json());
 
-
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/food", foodRouter);
 
 app.listen(port, async () => {
   console.log(`🟢 Server is running on port ${port}`);
-  await connectToDatabase()
+  await connectToDatabase();
 });
