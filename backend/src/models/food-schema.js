@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const foodSchema = new mongoose.Schema(
   {
-    name: {
+    foodName: {
       type: String,
       required: [true, "Food name is required"],
       trim: true,
@@ -17,24 +17,24 @@ const foodSchema = new mongoose.Schema(
     price: {
       type: Number,
       required: [true, "Price is required"],
-      min: [0, "Price must be a positive number"],
+      min: [0],
+    },
+    image: {
+      type: String,
+      required: false,
+      match: [
+        /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))$/s,
+        "Invalid image URL",
+      ],
+    },
+    ingredients: {
+      type: String,
+      required: false,
     },
     category: {
       type: String,
       required: [true, "Category is required"],
-      enum: ["Beverage", "Appetizer", "Main Course", "Dessert", "Snack"],
-    },
-    imageUrl: {
-      type: String,
-      required: [true, "Image URL is required"],
-      match: [
-        /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))$/,
-        "Invalid image URL format",
-      ],
-    },
-    isAvailable: {
-      type: Boolean,
-      default: true,
+      enum: ["Pizza", "Burger", "Drinks", "Dessert", "Pasta"], // Add real categories here
     },
   },
   { timestamps: true }

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Order from "./order-schema";
+import Order from "./order-schema.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -39,15 +39,15 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    orderedFoods: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Order",
+      },
+    ],
   },
   { timestamps: true }
 );
-
-userSchema.virtual("orders", {
-  ref: "Order",
-  localField: "_id",
-  foreignField: "user",
-});
 
 const User = mongoose.model("User", userSchema);
 

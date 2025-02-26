@@ -29,7 +29,7 @@ export const signUp = async (req, res, next) => {
     12;
 
     const token = jwt.sign({ userId: newUsers[0]._id }, TOKEN_SECRET, {
-      expiresIn: "2h",
+      expiresIn: "200h",
     });
 
     await session.commitTransaction();

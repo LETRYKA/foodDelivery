@@ -7,13 +7,12 @@ export const getUser = async (req, res, next) => {
     const user = await User.findById(id)
       .select("-password")
       .populate({
-        path: "orders",
+        path: "orderedFoods",
         populate: {
           path: "items.food",
-          select: "name price imageUrl",
+          select: "name price image",
         },
-      })
-      .lean();
+      });
 
     if (!user) {
       const error = new Error("User not found");
