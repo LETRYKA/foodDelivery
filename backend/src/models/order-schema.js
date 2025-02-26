@@ -7,11 +7,7 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    totalPrice: {
-      type: Number,
-      required: true,
-    },
-    foodOrderItems: [
+    items: [
       {
         food: {
           type: mongoose.Schema.Types.ObjectId,
@@ -21,10 +17,13 @@ const orderSchema = new mongoose.Schema(
         quantity: {
           type: Number,
           required: true,
-          min: [1],
         },
       },
     ],
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
     status: {
       type: String,
       enum: ["Pending", "Preparing", "Delivered", "Cancelled"],
@@ -35,5 +34,4 @@ const orderSchema = new mongoose.Schema(
 );
 
 const Order = mongoose.model("Order", orderSchema);
-
 export default Order;

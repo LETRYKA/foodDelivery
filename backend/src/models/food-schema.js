@@ -31,11 +31,10 @@ const foodSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-    category: {
-      type: String,
-      required: [true, "Category is required"],
-      enum: ["Pizza", "Burger", "Drinks", "Dessert", "Pasta"], // Add real categories here
-    },
+    categories: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category"
+    }]
   },
   { timestamps: true }
 );

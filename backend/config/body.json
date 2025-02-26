@@ -1,0 +1,22 @@
+[
+	// localhost:8080/api/food/food-order
+	{
+		"userId": "67be6c6fb99bdc9393673224",
+		"items": [
+			{
+				"foodId": "67be9b22bbcc45dc7f69b8d3",
+				"quantity": 2
+			}
+		]
+	},
+	// localhost:8080/api/users/67be63d9b3293f9faed6e8cc
+	{
+		"email": "ye@gmail.com",
+		"password": "123456"
+	}
+]
+// 67be6c6fb99bdc9393673224
+// Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2JlNmM2ZmI5OWJkYzkzOTM2NzMyMjQiLCJpYXQiOjE3NDA1ODI1MzIsImV4cCI6MTc0MTMwMjUzMn0.yuPhPAJatsF0KKZzhARvkzK-853GrzIIoWynD4AiIj0
+// YE
+// 67be63d9b3293f9faed6e8cc
+// Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2JlNjNkOWIzMjkzZjlmYWVkNmU4Y2MiLCJpYXQiOjE3NDA1ODMyNjAsImV4cCI6MTc0MTMwMzI2MH0.3LBSwKMHT1bJ80UNOZn0wQJ9GpS7DudfLKbZVwJQ6P4

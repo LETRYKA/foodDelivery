@@ -10,14 +10,12 @@ export const getUser = async (req, res, next) => {
         path: "orderedFoods",
         populate: {
           path: "items.food",
-          select: "name price image",
+          select: "foodName price image",
         },
       });
 
     if (!user) {
-      const error = new Error("User not found");
-      error.statusCode = 404;
-      throw error;
+      return res.status(404).json({ success: false, message: "User not found" });
     }
 
     res.status(200).json({ success: true, data: user });
