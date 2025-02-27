@@ -3,14 +3,22 @@ import Category from "../../models/category-schema.js";
 
 export const createFood = async (req, res, next) => {
   try {
-    const { foodName, price, image, category } = req.body;
+    const { foodName, description, price, image, categories } = req.body;
 
-    const existingCategory = await Category.findById(category);
+    const existingCategory = await Category.findById(categories);
     if (!existingCategory) {
-      return res.status(404).json({ success: false, message: "Category not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Category not found" });
     }
 
-    const newFood = new Food({ foodName, price, image, category });
+    const newFood = new Food({
+      foodName,
+      description,
+      price,
+      image,
+      categories,
+    });
     await newFood.save();
 
     res.status(201).json({ success: true, data: newFood });
@@ -21,15 +29,17 @@ export const createFood = async (req, res, next) => {
 
 export const getFoods = async (req, res, next) => {
   try {
-    const foods = await Food.find().populate("category", "name"); // Only get category name
+    const foods = await Food.find().populate({
+      path: "Category",
+      select: "name",
+      strictPopulate: false,
+    });
 
     res.status(200).json({ success: true, data: foods });
   } catch (err) {
     next(err);
   }
 };
-
-
 
 export const getFoodById = async (req, res, next) => {
   try {
@@ -60,7 +70,9 @@ export const updateFood = async (req, res, next) => {
     ).populate("categories");
 
     if (!updatedFood) {
-      return res.status(404).json({ success: false, message: "Food item not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Food item not found" });
     }
 
     res.status(200).json({
@@ -72,7 +84,6 @@ export const updateFood = async (req, res, next) => {
     next(err);
   }
 };
-
 
 export const deleteFood = async (req, res, next) => {
   try {
@@ -93,4 +104,3 @@ export const deleteFood = async (req, res, next) => {
     next(err);
   }
 };
-

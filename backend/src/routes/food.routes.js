@@ -32,7 +32,7 @@ foodRouter.patch("/food-order/:orderId", updateOrder); // Edit food order by ord
 // Food Routes
 foodRouter.post("/food", createFood); // Create food
 foodRouter.get("/food/:foodId", getFoodById); // Get single food item
-foodRouter.get("/food", getFoods); // Get single food item
+foodRouter.get("/food", getFoods); // Get all food
 foodRouter.patch("/food/:foodId", updateFood); // Edit food item
 foodRouter.delete("/food/:foodId", deleteFood); // Delete food item
 
