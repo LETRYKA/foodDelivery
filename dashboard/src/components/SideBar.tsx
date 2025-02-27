@@ -1,11 +1,10 @@
 "use client";
 
 import {
-  ScrollText,
-  ArrowLeftToLine,
-  LayoutDashboard,
-  ShoppingBasket,
-  Sidebar,
+  Package,
+  ArrowLeftRight,
+  PanelsTopLeft,
+  Layers2,
   Settings,
   LogOut,
 } from "lucide-react";
@@ -23,83 +22,48 @@ export default function SideBar() {
 
   return (
     <>
-      <div className="w-full h-screen overflow-hidden bg-[var(--sidebar)]">
-        <div
-          className={`
-            transition-all
-            duration-300
-            ease-in-out
-            relative
-            ${
-              sideBarShow ? "w-64" : "w-20"
-            } h-full bg-[var(--background)] flex flex-col items-center shadow-lg`}
-        >
-          <div className="flex flex-row w-full h-auto justify-center items-center my-6 gap-2">
-            <img src="./imgs/gem.webp" width={30} alt="Picture of the author" />
-            {sideBarShow && (
-              <>
-                <p className="text-xl text-[var(--foreground)] font-semibold">
-                  Food Eats.
-                </p>
-              </>
-            )}
-          </div>
-          <ArrowLeftToLine
-            onClick={sideBarHandler}
-            className="w-5 mt-2 stroke-[var(--primary)] cursor-pointer"
+      <div className={`${sideBarShow ? 'w-64' : 'w-20'} transition-all duration-300 ease-in-out h-full flex flex-col items-center bg-[var(--foreground)] relative`}>
+        <div className={`w-3/4 flex ${sideBarShow ? 'justify-between' : 'justify-center'} mt-9`}>
+          {sideBarShow && <img src="/imgs/default.png" className="h-8" />}
+          <ArrowLeftRight className="stroke-white w-4 cursor-pointer" onClick={sideBarHandler} />
+        </div>
+        <hr className="w-full border-[var(--muted)] mt-6" />
+        <div className={`w-3/4 h-40 flex flex-col mt-6 gap-4 ${!sideBarShow && 'items-center'}`}>
+          <DashboardController
+            icon={PanelsTopLeft}
+            title={"Dashboard"}
+            active={true}
+            sideBarShow={sideBarShow}
           />
-          <div className="w-3/4 flex justify-start flex-col mt-20">
-            {sideBarShow && (
-              <p className="text-xs text-[var(--muted-foreground)]">OVERVIEW</p>
-            )}
-            <div
-              className={`mt-4 flex flex-col gap-7 justify-center ${
-                sideBarShow ? "" : "items-center"
-              }`}
-            >
-              <DashboardController
-                icon={LayoutDashboard}
-                title={"Dashboard"}
-                active={true}
-                sideBarShow={sideBarShow}
-              />
-              <DashboardController
-                icon={ScrollText}
-                title={"Order"}
-                active={false}
-                sideBarShow={sideBarShow}
-              />
-              <DashboardController
-                icon={ShoppingBasket}
-                title={"Menu"}
-                active={false}
-                sideBarShow={sideBarShow}
-              />
-            </div>
+          <div className={`${sideBarShow ? 'ml-3' : ''} flex flex-col gap-5`}>
+            <DashboardController
+              icon={Package}
+              title={"Order"}
+              active={false}
+              sideBarShow={sideBarShow}
+            />
+            <DashboardController
+              icon={Layers2}
+              title={"Menu"}
+              active={false}
+              sideBarShow={sideBarShow}
+            />
           </div>
-          <div className="absolute bottom-10 w-3/4">
-            {sideBarShow && (
-              <p className="text-xs text-[var(--muted-foreground)]">SETTINGS</p>
-            )}
-            <div
-              className={`mt-4 flex flex-col gap-7 justify-center ${
-                sideBarShow ? "" : "items-center"
-              }`}
-            >
-              <DashboardController
-                icon={Settings}
-                title={"Settings"}
-                active={false}
-                sideBarShow={sideBarShow}
-              />
-              <DashboardController
-                icon={LogOut}
-                title={"Logout"}
-                active={false}
-                sideBarShow={sideBarShow}
-              />
-            </div>
-          </div>
+        </div>
+        <div className={`w-3/4 h-40 flex flex-col ${sideBarShow ? '' : 'items-center'} mt-6 gap-5 absolute bottom-10`}>
+          {sideBarShow && <p className="text-sm text-[var(--muted-foreground)]">Settings</p>}
+          <DashboardController
+            icon={Settings}
+            title={"Settings"}
+            active={false}
+            sideBarShow={sideBarShow}
+          />
+          <DashboardController
+            icon={LogOut}
+            title={"Logout"}
+            active={false}
+            sideBarShow={sideBarShow}
+          />
         </div>
       </div>
     </>
