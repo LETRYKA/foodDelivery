@@ -1,8 +1,8 @@
 "use client"
 
-import { UserRound, EllipsisVertical } from "lucide-react"
-import { Line, LineChart, CartesianGrid, Dot, ResponsiveContainer } from "recharts"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { Line, LineChart, CartesianGrid, Dot, ResponsiveContainer } from "recharts"
+import { UserRound, EllipsisVertical } from "lucide-react"
 
 const chartData = [
 	{ browser: "other", visitors: 30, fill: "transparent" },
@@ -37,7 +37,9 @@ const StatusWidget = () => {
 
 			{/* Chart Section */}
 			<div className="w-20 h-2/4">
-				<ChartContainer config={chartConfig} className="w-full h-full mt-1">
+				<ChartContainer
+					config={chartConfig}
+					className="w-full h-full mt-1 [mask-image:linear-gradient(to_left,#000_30%,transparent_100%)]">
 					<ResponsiveContainer width="100%" height="100%">
 						<LineChart data={chartData} margin={{ top: 5, right: 5, bottom: 5, left: 5 }}>
 							<CartesianGrid vertical={false} strokeDasharray="3 3" />

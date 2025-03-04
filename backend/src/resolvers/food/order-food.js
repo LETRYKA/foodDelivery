@@ -55,7 +55,7 @@ export const orderFood = async (req, res, next) => {
 export const getOrders = async (req, res, next) => {
 	try {
 		const orders = await Order.find()
-			.populate("user", "name email phoneNumber")
+			.populate("user", "name email phoneNumber profile address")
 			.populate("items.food", "foodName price image")
 			.sort({ createdAt: -1 });
 

@@ -35,6 +35,14 @@ const userSchema = new mongoose.Schema(
       enum: ["USER", "ADMIN"],
       default: "USER",
     },
+    profile: {
+      type: String,
+      required: false,
+      match: [
+        /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))$/s,
+        "Invalid image URL",
+      ],
+    },
     isVerified: {
       type: Boolean,
       default: false,

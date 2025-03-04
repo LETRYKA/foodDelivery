@@ -12,7 +12,11 @@ export const signIn = async (req, res, next) => {
     if (!user) {
       const error = new Error("User not found");
       error.statusCode = 404;
-      throw error;
+      return res.status(404).json({
+        success: false,
+        message: error.message,
+        statusCode: error.statusCode
+      });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -20,11 +24,22 @@ export const signIn = async (req, res, next) => {
     if (!isPasswordValid) {
       const error = new Error("Password is not valid");
       error.statusCode = 401;
-      throw error;
+      return res.status(401).json({
+        success: false,
+        message: error.message,
+        statusCode: error.statusCode
+      });
     }
 
     const token = jwt.sign({ userId: user._id }, TOKEN_SECRET, {
       expiresIn: "200h",
+    });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.status(200).json({

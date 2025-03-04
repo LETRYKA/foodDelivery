@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Funnel_Display } from "next/font/google";
-import "./globals.css";
+import SideBar from "@/components/SideBar";
+import Header from "@/components/Header";
+import "@/app/globals.css";
 
 const funnelDisplay = Funnel_Display({
   weight: ["300", "400", "500", "600", "700", "800"],
@@ -20,7 +22,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={funnelDisplay.variable}>
-      <body>{children}</body>
+      <div className="w-full h-screen flex">
+        <SideBar />
+        <div className="w-full h-full">
+          <Header />
+          <body>{children}</body>
+        </div>
+      </div>
     </html>
   );
 }
