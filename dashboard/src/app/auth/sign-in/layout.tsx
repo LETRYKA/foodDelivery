@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Funnel_Display } from "next/font/google";
-import SideBar from "@/components/SideBar";
-import Header from "@/components/Header";
+import { Toaster, toast } from "sonner";
 import "@/app/globals.css";
 
 const funnelDisplay = Funnel_Display({
@@ -22,7 +21,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={funnelDisplay.variable}>
-      <body>{children}</body>
+      <body className="w-full h-screen flex">
+        <div className="w-full h-full">
+          <Toaster position="bottom-right" richColors />
+          {children}
+        </div>
+      </body>
     </html>
   );
 }

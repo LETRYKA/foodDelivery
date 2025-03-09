@@ -4,6 +4,7 @@ import {
   getOrders,
   getOrderById,
   updateOrder,
+  deleteOrder,
 } from "../resolvers/food/order-food.js";
 
 import {
@@ -28,6 +29,7 @@ foodRouter.post("/food-order", orderFood); // Create a food order
 foodRouter.get("/food-order", getOrders); // Get all food orders
 foodRouter.get("/food-order/:userId", getOrderById); // Get food orders by userId
 foodRouter.patch("/food-order/:orderId", updateOrder); // Edit food order by orderId
+foodRouter.delete("/food-order/:orderId", deleteOrder); // Delete food order by orderId
 
 // Food Routes
 foodRouter.post("/food", createFood); // Create food

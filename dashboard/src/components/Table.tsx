@@ -1,22 +1,20 @@
 "use client";
 
-import { updateStatus } from "@/lib/api";
-import * as React from "react";
+import React, { useState, useEffect } from "react";
+import { updateStatus, deleteOrder } from "@/lib/api";
+import { Button } from "@/components/ui/button";
 import {
   ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  SortingState,
 } from "@tanstack/react-table";
 import {
   Check,
-  ChevronDown,
   CircleAlert,
   CircleDot,
   CircleX,
@@ -24,23 +22,12 @@ import {
   MoreHorizontal,
   Pencil,
   Trash2,
+  ArrowUpDown,
 } from "lucide-react";
-
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -57,34 +44,55 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
 
-export type Payment = {
-  [x: string]: any;
-  id: string;
-  amount: number;
+type Payment = {
+  _id: string;
+  totalPrice: number;
   status: "Pending" | "Preparing" | "Delivered" | "Cancelled";
-  email: string;
-  name: string;
-  img: string;
-  date: string;
-  deliveryAddress: string;
-  phone: string;
+  items: any[];
+  createdAt: string;
+  user: {
+    name?: string;
+    email?: string;
+    phoneNumber?: string;
+    profile?: string;
+    address?: string;
+  };
 };
 
-const statusColorMap = {
-  Pending: "text-yellow-500 bg-yellow-200 border-yellow-500",
-  Preparing: "text-indigo-500 bg-indigo-200 border-indigo-500",
-  Delivered: "text-emerald-500 bg-emerald-200 border-emerald-500",
-  Cancelled: "text-rose-500 bg-rose-200 border-rose-500",
-};
-
-const statusIconMap = {
-  Pending: <CircleAlert width={15} />,
-  Preparing: <CircleDot width={15} />,
-  Delivered: <Check width={15} />,
-  Cancelled: <CircleX width={15} />,
+const statusStyles = {
+  Pending: {
+    color: "text-yellow-500",
+    bg: "bg-yellow-200",
+    border: "border-yellow-500",
+    icon: <CircleAlert size={15} />,
+  },
+  Preparing: {
+    color: "text-indigo-500",
+    bg: "bg-indigo-200",
+    border: "border-indigo-500",
+    icon: <CircleDot size={15} />,
+  },
+  Delivered: {
+    color: "text-emerald-500",
+    bg: "bg-emerald-200",
+    border: "border-emerald-500",
+    icon: <Check size={15} />,
+  },
+  Cancelled: {
+    color: "text-rose-500",
+    bg: "bg-rose-200",
+    border: "border-rose-500",
+    icon: <CircleX size={15} />,
+  },
 };
 
 export const columns: ColumnDef<Payment>[] = [
@@ -92,71 +100,81 @@ export const columns: ColumnDef<Payment>[] = [
     id: "select",
     header: ({ table }) => (
       <Checkbox
-        className="ml-3"
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
+        checked={table.getIsAllPageRowsSelected()}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
+        className="ml-1"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
-        className="ml-3"
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
+        className="ml-5"
       />
     ),
     enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    id: "numbering",
-    header: "#",
-    cell: ({ row }) => <div className="text-center">{row.index + 1}</div>,
   },
   {
     accessorKey: "customer",
-    header: "Customer",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Customer
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => (
-      <div className="flex mx-auto w-72 justify-start items-center">
+      <div className="flex items-center">
         <div
-          className="w-10 h-10 rounded-full mr-3 bg-cover bg-center ml-5"
+          className="w-10 h-10 rounded-full mr-3 bg-cover bg-center"
           style={{
             backgroundImage: `url(${
               row.original.user?.profile ||
               "https://img.freepik.com/free-photo/3d-rendering-zoom-call-avatar_23-2149556781.jpg"
             })`,
           }}
-        ></div>
-        <div className="ml-5 flex flex-col justify-start items-start">
-          <div className="font-medium text-base">
-            {row.original.user?.name || "-"}
-          </div>
-          <div className="text-sm text-gray-500 -mt-[3px]">
+        />
+        <div>
+          <div className="font-medium">{row.original.user?.name || "-"}</div>
+          <div className="text-sm text-gray-500">
             {row.original.user?.email || "-"}
           </div>
         </div>
       </div>
     ),
+    sortingFn: (rowA, rowB) => {
+      const nameA = rowA.original.user?.name || "";
+      const nameB = rowB.original.user?.name || "";
+      return nameA.localeCompare(nameB);
+    },
   },
   {
     accessorKey: "order",
-    header: "Orders",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Orders
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => (
       <div className="flex mx-auto w-fit justify-center items-center">
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="text-sm">
-              {row.original.items.length || "-"} Orders
+              {row?.original?.items?.length || "-"} Orders
             </Button>
           </PopoverTrigger>
           <PopoverContent align="start" className="w-80 flex flex-col gap-3">
-            {row.original.items.map((food: any) => (
+            {row.original.items.map((food: any, i: any) => (
               <div
-                key={food}
+                key={i}
                 className="w-full h-12 rounded-[var(--radius)] flex flex-row justify-between items-center"
               >
                 <div className="h-full flex justify-start items-center">
@@ -180,353 +198,395 @@ export const columns: ColumnDef<Payment>[] = [
         </Popover>
       </div>
     ),
+    sortingFn: (rowA, rowB) => {
+      const countA = rowA.original.items.length;
+      const countB = rowB.original.items.length;
+      return countA - countB;
+    },
   },
   {
     accessorKey: "phoneNumber",
-    header: "Phone",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Phone
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => (
       <div className="text-center">{row.original.user?.phoneNumber || "-"}</div>
     ),
+    sortingFn: (rowA, rowB) => {
+      const phoneA = rowA.original.user?.phoneNumber || "";
+      const phoneB = rowB.original.user?.phoneNumber || "";
+      return phoneA.localeCompare(phoneB);
+    },
   },
-
   {
     accessorKey: "createdAt",
-    header: "Date",
-    cell: ({ row }) => {
-      const formattedDate = row.original.createdAt
-        ? new Date(row.original.createdAt).toLocaleDateString("en-Us", {
-            month: "short",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-          })
-        : "-";
-
-      return <div className="text-center">{formattedDate}</div>;
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Date
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => (
+      <div className="text-center">
+        {row.original.createdAt
+          ? new Date(row.original.createdAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })
+          : "-"}
+      </div>
+    ),
+    sortingFn: (rowA, rowB) => {
+      const dateA = new Date(rowA.original.createdAt || 0);
+      const dateB = new Date(rowB.original.createdAt || 0);
+      return dateA.getTime() - dateB.getTime();
     },
   },
   {
     accessorKey: "totalPrice",
-    header: "Total Amount",
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("totalPrice"));
-
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "MNT",
-      }).format(amount);
-
-      return (
-        <div className="text-center font-bold text-[var(--primary)]">
-          {formatted}
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "deliveryAddress",
-    header: "Delivery Address",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Price
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => (
-      <div className="text-center">{row.original.user?.address || "-"}</div>
+      <div className="text-center font-bold text-primary">
+        {new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "MNT",
+        }).format(row.getValue("totalPrice"))}
+      </div>
     ),
   },
   {
+    accessorKey: "deliveryAddress",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Address
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => (
+      <div className="text-center">{row.original.user?.address || "-"}</div>
+    ),
+    sortingFn: (rowA, rowB) => {
+      const addrA = rowA.original.user?.address || "";
+      const addrB = rowB.original.user?.address || "";
+      return addrA.localeCompare(addrB);
+    },
+  },
+  {
     accessorKey: "status",
-    header: "Delivery State",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Status
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
     cell: ({ row }) => {
-      const status = row.getValue("status") as keyof typeof statusColorMap;
-      const statusColor = statusColorMap[status] || "";
-      const statusIcon = statusIconMap[status] || "";
-
+      const status = row.getValue("status") as keyof typeof statusStyles;
+      const { color, bg, border, icon } = statusStyles[status];
       return (
-        <div className="text-center text-xs capitalize flex justify-center">
-          <div
-            className={`w-fit px-2 rounded-full border ${statusColor} flex flex-row justify-center items-center gap-1`}
+        <div className="flex justify-center">
+          <span
+            className={`px-2 py-1 rounded-full border ${color} ${bg} ${border} flex items-center gap-1 text-xs`}
           >
-            {status} {statusIcon}
-          </div>
+            {status} {icon}
+          </span>
         </div>
       );
     },
   },
   {
     id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const payment = row.original;
+    cell: ({ row, table }) => {
+      const [editOpen, setEditOpen] = useState(false);
+
+      const handleStatusChange = async (newStatus: Payment["status"]) => {
+        try {
+          await updateStatus({ orderId: row.original._id, newStatus });
+          table.options.meta?.updateData((old: Payment[]) =>
+            old.map((item) =>
+              item._id === row.original._id
+                ? { ...item, status: newStatus }
+                : item
+            )
+          );
+          toast.success("Status updated");
+          setEditOpen(false);
+        } catch (error) {
+          toast.error("Failed to update status");
+        }
+      };
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-xs">
-              <Copy style={{ width: "13px" }} />
-              Copy Order
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-xs">
-              <Pencil style={{ width: "13px" }} />
-              Edit Order
-            </DropdownMenuItem>
-            <DropdownMenuItem className="text-xs text-[var(--destructive)] hover:text-[var(--destructive)]">
-              <Trash2 style={{ width: "13px" }} />
-              Delete Order
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm">
+                <MoreHorizontal size={16} />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => {
+                  navigator.clipboard.writeText(row.original._id);
+                  toast.success("Order ID copied");
+                }}
+              >
+                <Copy size={13} className="mr-2" /> Copy Order
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setEditOpen(true)}>
+                <Pencil size={13} className="mr-2" /> Edit Order
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-destructive"
+                onClick={async () => {
+                  if (!confirm("Are you sure you want to delete this order?"))
+                    return;
+                  try {
+                    await deleteOrder({ orderId: row.original._id });
+                    table.options.meta?.updateData((old: Payment[]) =>
+                      old.filter((item) => item._id !== row.original._id)
+                    );
+                    toast.success("Order deleted");
+                  } catch (error) {
+                    toast.error("Failed to delete order");
+                  }
+                }}
+              >
+                <Trash2 size={13} className="mr-2" /> Delete Order
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <Dialog open={editOpen} onOpenChange={setEditOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Edit Order Status</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-2">
+                {Object.keys(statusStyles).map((status) => (
+                  <Button
+                    key={status}
+                    variant="outline"
+                    className="w-full"
+                    onClick={() =>
+                      handleStatusChange(status as Payment["status"])
+                    }
+                  >
+                    Set to {status}
+                  </Button>
+                ))}
+              </div>
+            </DialogContent>
+          </Dialog>
+        </>
       );
     },
   },
 ];
 
-const TableOrder = (props: any) => {
-  const { orders } = props;
+const TableOrder = ({ orders }: { orders: { data: Payment[] } }) => {
+  const [data, setData] = useState(orders?.data || []);
+  const [filterInput, setFilterInput] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState({});
 
-  let order = orders?.data;
-
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [filterInput, setFilterInput] = React.useState("");
-  const [data, setData] = React.useState(order);
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  useEffect(() => {
+    setData(orders?.data || []);
+  }, [orders]);
 
   const table = useReactTable({
     data,
     columns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
+    onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
     state: {
       sorting,
-      columnFilters,
-      columnVisibility,
+      globalFilter: filterInput,
       rowSelection,
     },
+    meta: {
+      updateData: (updater: any) =>
+        setData((old) =>
+          typeof updater === "function" ? updater(old) : updater
+        ),
+    },
     globalFilterFn: (row, columnId, filterValue) => {
-      const { name, email, phone } = row.original;
-
-      const lowerFilterValue = filterValue.toLowerCase();
-      const lowerName = name.toLowerCase();
-      const lowerEmail = email.toLowerCase();
-      const lowerPhone = phone.toLowerCase();
-
-      return (
-        lowerName.includes(lowerFilterValue) ||
-        lowerEmail.includes(lowerFilterValue) ||
-        lowerPhone.includes(lowerFilterValue)
-      );
+      const searchTerm = filterValue.toLowerCase();
+      const fields = [
+        row.original.user?.name || "",
+        row.original.user?.email || "",
+        row.original.user?.phoneNumber || "",
+      ];
+      return fields.some((field) => field.toLowerCase().includes(searchTerm));
     },
   });
 
-  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setFilterInput(value);
-    table.setGlobalFilter(value);
-  };
-
-  // Handle delivery state change
-  const handleDeliveryStateChange = (
-    newStatus: "Pending" | "Preparing" | "Delivered" | "Cancelled"
-  ) => {
+  const handleStatusChange = async (newStatus: Payment["status"]) => {
     const selectedRows = table.getSelectedRowModel().rows;
-    console.log(selectedRows);
-    const updatedData = data.map((row: any) => {
-      if (
-        selectedRows.some((selectedRow) => selectedRow.original.id === row.id)
-      ) {
-        return { ...row, status: newStatus };
-      }
-      return row;
-    });
-    setIsDialogOpen(false);
-    table.resetRowSelection();
+    try {
+      await Promise.all(
+        selectedRows.map((row) =>
+          updateStatus({ orderId: row.original._id, newStatus })
+        )
+      );
+      table.options.meta?.updateData((old: Payment[]) =>
+        old.map((order) =>
+          selectedRows.some((row) => row.original._id === order._id)
+            ? { ...order, status: newStatus }
+            : order
+        )
+      );
+      toast.success("Status updated");
+    } catch (error) {
+      toast.error("Failed to update status");
+    } finally {
+      setIsDialogOpen(false);
+      table.resetRowSelection();
+    }
   };
 
   return (
-    <>
-      <div className="w-full h-[90%] flex flex-row">
-        <div className="w-full h-full flex flex-col">
-          <div className="w-full h-full pb-8 gap-5 pt-2 flex flex-row overflow-hidden">
-            <div className="w-full">
-              <div className="flex items-center py-4 gap-2">
-                <Input
-                  placeholder="Filter by name, email, or phone..."
-                  value={filterInput}
-                  onChange={handleFilterChange}
-                  className="max-w-sm bg-[var(--background)]"
-                />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
-                      Columns <ChevronDown />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    {table
-                      .getAllColumns()
-                      .filter((column) => column.getCanHide())
-                      .map((column) => {
-                        return (
-                          <DropdownMenuCheckboxItem
-                            key={column.id}
-                            className="capitalize"
-                            checked={column.getIsVisible()}
-                            onCheckedChange={(value) =>
-                              column.toggleVisibility(!!value)
-                            }
-                          >
-                            {column.id}
-                          </DropdownMenuCheckboxItem>
-                        );
-                      })}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      disabled={table.getSelectedRowModel().rows.length === 0}
-                    >
-                      Change Delivery State (
-                      {table.getSelectedRowModel().rows.length})
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
-                    <DialogHeader>
-                      <DialogTitle>
-                        Change Delivery State (
-                        {table.getSelectedRowModel().rows.length})
-                      </DialogTitle>
-                    </DialogHeader>
-                    <div className="flex flex-col gap-4">
-                      <Button
-                        variant="outline"
-                        onClick={() => handleDeliveryStateChange("Pending")}
-                      >
-                        Set to Pending
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => handleDeliveryStateChange("Preparing")}
-                      >
-                        Set to Preparing
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => handleDeliveryStateChange("Delivered")}
-                      >
-                        Set to Delivered
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => handleDeliveryStateChange("Cancelled")}
-                      >
-                        Set to Cancelled
-                      </Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </div>
-              <div className="rounded-md border bg-[var(--background)] overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                      <TableRow key={headerGroup.id}>
-                        {headerGroup.headers.map((header) => {
-                          return (
-                            <TableHead key={header.id} className="text-center">
-                              {header.isPlaceholder
-                                ? null
-                                : flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext()
-                                  )}
-                            </TableHead>
-                          );
-                        })}
-                      </TableRow>
-                    ))}
-                  </TableHeader>
-                  <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                      table.getRowModel().rows.map((row) => (
-                        <TableRow
-                          key={row.id}
-                          data-state={row.getIsSelected() && "selected"}
-                        >
-                          {row.getVisibleCells().map((cell) => (
-                            <TableCell
-                              key={cell.id}
-                              className="text-center py-3"
-                            >
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext()
-                              )}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      ))
-                    ) : (
-                      <TableRow>
-                        <TableCell
-                          colSpan={columns.length}
-                          className="h-24 text-center"
-                        >
-                          No results.
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-              <div className="flex items-center justify-end space-x-2 py-4">
-                <div className="flex-1 text-sm text-muted-foreground">
-                  {table.getFilteredSelectedRowModel().rows.length} of{" "}
-                  {table.getFilteredRowModel().rows.length} row(s) selected.
-                </div>
-                <div className="space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                  >
-                    Previous
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                  >
-                    Next
-                  </Button>
-                </div>
-              </div>
+    <div className="space-y-4 w-full">
+      <div className="flex items-center gap-4">
+        <Input
+          placeholder="Search"
+          value={filterInput}
+          onChange={(e) => {
+            setFilterInput(e.target.value);
+            table.setGlobalFilter(e.target.value);
+          }}
+          className="max-w-sm bg-[var(--background)]"
+        />
+        <Button
+          variant="outline"
+          disabled={!table.getSelectedRowModel().rows.length}
+          onClick={() => setIsDialogOpen(true)}
+        >
+          Change Status ({table.getSelectedRowModel().rows.length})
+        </Button>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>
+                Change Status ({table.getSelectedRowModel().rows.length})
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-2">
+              {Object.keys(statusStyles).map((status) => (
+                <Button
+                  key={status}
+                  variant="outline"
+                  className="w-full"
+                  onClick={() =>
+                    handleStatusChange(status as Payment["status"])
+                  }
+                >
+                  Set to {status}
+                </Button>
+              ))}
             </div>
-          </div>
-        </div>
+          </DialogContent>
+        </Dialog>
       </div>
-    </>
+
+      <div className="rounded-md border overflow-x-auto bg-[var(--background)]">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow
+                key={headerGroup.id}
+                className="hover:bg-[var(--background)]"
+              >
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id} className="text-center">
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  className="py-20"
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className="py-3">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="flex items-center justify-end gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </Button>
+      </div>
+    </div>
   );
 };
 

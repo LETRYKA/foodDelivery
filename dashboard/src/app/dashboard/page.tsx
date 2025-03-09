@@ -3,13 +3,17 @@ import Income from "@/components/Income";
 import Banner from "@/components/Banner";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import axios from "axios";
+import { fetchOrders } from "@/lib/api";
 
 const Dashboard = async () => {
   const cookieStore = cookies();
   const token = (await cookieStore).get("token")?.value;
+  const orders = await fetchOrders();
 
   if (!token) {
+    redirect("/auth/sign-in");
+  }
+  if (orders.error === "Unauthorized") {
     redirect("/auth/sign-in");
   }
 
@@ -27,7 +31,7 @@ const Dashboard = async () => {
             </div>
           </div>
           <div className="w-[23%] h-full rounded-[var(--radius)] flex flex-col justify-start items-center">
-            <Income />
+            <Income orders={orders} />
           </div>
         </div>
       </div>

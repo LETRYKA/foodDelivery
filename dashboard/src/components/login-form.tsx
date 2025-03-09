@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import axios from "axios";
+import { toast } from "sonner";
 
 export function LoginForm({
   className,
@@ -35,9 +36,7 @@ export function LoginForm({
       console.log(res);
     } catch (err) {
       setIsLoading(false);
-      setErrorMessage(
-        (err as any).response?.data?.message || "An error occurred"
-      );
+      toast.error(err.response?.data?.message);
       console.error(err);
     }
   };
@@ -100,7 +99,6 @@ export function LoginForm({
         <Button type="submit" className="w-full py-5" disabled={isLoading}>
           {isLoading ? "Signing in..." : "Continue"}
         </Button>
-        {errorMessage && <p>{errorMessage}</p>}
         <Button
           variant="outline"
           className="w-full flex justify-center items-center"
