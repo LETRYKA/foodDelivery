@@ -27,7 +27,7 @@ const Header = async () => {
     const res = await axios.get("http://localhost:8080/api/users", {
       headers: { Authorization: `Bearer ${token}` },
     });
-    user = res?.data?.data?.[0];
+    user = res?.data?.data?.[1];
   } catch (err) {
     console.error("Error fetching user:", err);
     redirect("/auth/sign-in");

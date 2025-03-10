@@ -3,6 +3,9 @@
 import { cookies } from "next/headers";
 import axios from "axios";
 
+
+// ORDER API
+
 export async function fetchOrders() {
   const token = (await cookies()).get("token")?.value;
 
@@ -65,5 +68,27 @@ export async function deleteOrder({ orderId }: { orderId: string }) {
   } catch (err) {
     console.error("Error deleting order:", err);
     return { error: "Failed to delete order" };
+  }
+}
+
+
+// FOOD API
+
+
+export async function fetchFoods() {
+  const token = (await cookies()).get("token")?.value;
+
+  if (!token) {
+    return { error: "Unauthorized" };
+  }
+
+  try {
+    const res = await axios.get("http://localhost:8080/api/food/food", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching orders:", err);
+    return { error: "Failed to fetch orders" };
   }
 }

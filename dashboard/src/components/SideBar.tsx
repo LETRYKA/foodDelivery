@@ -14,7 +14,7 @@ export default function SideBar() {
 
   return (
     <div
-      className={`${sideBarShow ? "w-64" : "w-20"} transition-all duration-300 ease-in-out h-full flex flex-col items-center bg-[var(--foreground)] relative`}
+      className={`${sideBarShow ? "w-64" : "w-20"} transition-all duration-300 ease-in-out h-40 h-full flex flex-col items-center bg-[var(--foreground)] relative`}
     >
       <div className={`w-3/4 flex ${sideBarShow ? "justify-between" : "justify-center"} mt-9`}>
         {sideBarShow && <img src="/imgs/default.png" className="h-8" />}
