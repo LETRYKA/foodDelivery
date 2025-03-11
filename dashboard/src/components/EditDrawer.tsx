@@ -1,5 +1,8 @@
 "use client";
 
+const CLOUDINARY_URL = process.env.NEXT_PUBLIC_CLOUDINARY_URL;
+const UPLOAD_PRESET = process.env.NEXT_PUBLIC_UPLOAD_PRESET;
+
 import * as React from "react";
 import { fetchFoodById, PatchFoodById } from "@/lib/api";
 import { ArrowUpRight, ImageUp, Loader2 } from "lucide-react";
@@ -34,9 +37,6 @@ interface FoodData {
   price: number;
   image: string;
 }
-
-const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dvswnpwbg/image/upload";
-const UPLOAD_PRESET = "updata";
 
 export function EditDrawer({ foodId, dataRefresh }: Props) {
   const [loading, setLoading] = useState(false);
@@ -122,7 +122,7 @@ export function EditDrawer({ foodId, dataRefresh }: Props) {
       }
     };
     fetchData();
-  }, [foodId]);
+  }, [foodId, dataRefresh]);
 
   useEffect(() => {
     if (foodData) {

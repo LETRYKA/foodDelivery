@@ -4,6 +4,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { fetchFoods } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { EditDrawer } from "@/components/EditDrawer";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 const Menu = () => {
   const [foodsData, setFoodsData] = useState([]);
@@ -27,6 +29,14 @@ const Menu = () => {
       <div className="w-full h-80 bg-[#090D1B] rounded-[var(--radius)]"></div>
       <div className="w-full flex flex-row items-center gap-7">
         <div className="w-1/6 h-full bg-[var(--background)] rounded-[var(--radius)] py-4 px-6">
+          <div className="w-full h-14 my-3 bg-[#090D1B] rounded-[var(--radius)] flex flex-row justify-center items-center gap-3 cursor-pointer">
+            <p className="text-sm text-[var(--background)] font-bold">
+              Create New Dish
+            </p>
+            <div className="h-[50%] aspect-square bg-[var(--background)] rounded-sm flex justify-center items-center">
+              <Plus className="stroke-[var(--foreground)]" width={15} />
+            </div>
+          </div>
           <p className="text-lg font-semibold">Filters</p>
           <div className="flex flex-col mt-4 gap-4">
             <p className="text-sm text-[var(--foreground)]/30 font-regular -mb-1">
