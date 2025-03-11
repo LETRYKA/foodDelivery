@@ -23,6 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={funnelDisplay.variable}>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
       <body className="w-full h-screen flex">
         <SideBar />
         <div className="w-full h-full">

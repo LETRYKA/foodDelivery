@@ -5,12 +5,12 @@ export const createFood = async (req, res, next) => {
   try {
     const { foodName, description, price, image, categories } = req.body;
 
-    const existingCategory = await Category.findById(categories);
-    if (!existingCategory) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Category not found" });
-    }
+    // const existingCategory = await Category.findById(categories);
+    // if (!existingCategory) {
+    //   return res
+    //     .status(404)
+    //     .json({ success: false, message: "Food not found" });
+    // }
 
     const newFood = new Food({
       foodName,
@@ -61,11 +61,14 @@ export const getFoodById = async (req, res, next) => {
 export const updateFood = async (req, res, next) => {
   try {
     const { foodId } = req.params;
-    const { categoryId } = req.body;
+    const { categoryId, foodName, description, price, image } = req.body;
 
     const updatedFood = await Food.findByIdAndUpdate(
       foodId,
-      { $addToSet: { categories: categoryId } },
+      { 
+        $set: { foodName, description, price, image }, 
+        $addToSet: { categories: categoryId }
+      },
       { new: true, runValidators: true }
     ).populate("categories");
 
@@ -77,13 +80,14 @@ export const updateFood = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: "Category added to food successfully",
+      message: "Food updated successfully",
       data: updatedFood,
     });
   } catch (err) {
     next(err);
   }
 };
+
 
 export const deleteFood = async (req, res, next) => {
   try {
