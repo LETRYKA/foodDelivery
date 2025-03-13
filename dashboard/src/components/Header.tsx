@@ -11,9 +11,22 @@ import {
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
+const fetchCurrentUser = async (token: string) => {
+  try {
+    const res = await axios.get("http://localhost:8080/api/users/me", {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (err) {
+    return null;
+  }
+};
+
 const Header = async () => {
   const cookieStore = cookies();
   const token = (await cookieStore).get("token")?.value;
+  const user = token ? await fetchCurrentUser(token) : null;
   const today = new Date();
 
   const dateFormat: string = today.toLocaleDateString("en-US", {
@@ -22,16 +35,11 @@ const Header = async () => {
     day: "numeric",
   });
 
-  let user = null;
-  try {
-    const res = await axios.get("http://localhost:8080/api/users", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    user = res?.data?.data?.[1];
-  } catch (err) {
-    console.error("Error fetching user:", err);
+  if (!user) {
     redirect("/auth/sign-in");
   }
+
+  console.log(user.data, "HELLO");
 
   return (
     <>
@@ -43,7 +51,7 @@ const Header = async () => {
           </p>
           <div className="text-2xl text-[var(--foreground)] font-regular -mt-2 flex">
             Welcome back,&nbsp;
-            <strong className="text-[var(--chart-3)]">{user.name}</strong>
+            <strong className="text-[var(--chart-3)]">{user.data.name}</strong>
           </div>
         </div>
         <div className="flex h-full justify-end items-center flex-row gap-6">
@@ -101,7 +109,7 @@ const Header = async () => {
             </div>
           </div>
           <hr className="border-t-0 border-r-1 border-[var(--sidebar-ring)] h-2/4" />
-          <Profile user={user} />
+          <Profile user={user.data} />
         </div>
       </div>
     </>

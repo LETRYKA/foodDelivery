@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { EditDrawer } from "@/components/EditDrawer";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { CreateDialog } from "@/components/CreateDialog";
 
 const Menu = () => {
   const [foodsData, setFoodsData] = useState([]);
@@ -37,6 +38,7 @@ const Menu = () => {
               <Plus className="stroke-[var(--foreground)]" width={15} />
             </div>
           </div>
+          <CreateDialog />
           <p className="text-lg font-semibold">Filters</p>
           <div className="flex flex-col mt-4 gap-4">
             <p className="text-sm text-[var(--foreground)]/30 font-regular -mb-1">
