@@ -22,10 +22,6 @@ const foodSchema = new mongoose.Schema(
     image: {
       type: String,
       required: false,
-      match: [
-        /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))$/s,
-        "Invalid image URL",
-      ],
     },
     ingredients: {
       type: String,

@@ -152,3 +152,63 @@ export async function PatchFoodById({
     return { error: "Failed to patch food" };
   }
 }
+
+export async function CreateFood({
+  foodName,
+  foodPrice,
+  foodDescription,
+  foodImage,
+}: {
+  foodName: string;
+  foodPrice: number;
+  foodDescription: string;
+  foodImage: string;
+}) {
+  const token = (await cookies()).get("token")?.value;
+
+  if (!token) {
+    return { error: "Unauthorized" };
+  }
+
+  try {
+    const res = await axios.post(
+      `http://localhost:8080/api/food/food`,
+      {
+        foodName,
+        price: foodPrice,
+        description: foodDescription,
+        image: foodImage,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.error("Error creating food:", err);
+    return { error: "Failed to create food" };
+  }
+}
+
+
+export async function deleteFoodById({ foodId }: { foodId: string }) {
+  const token = (await cookies()).get("token")?.value;
+
+  if (!token) {
+    return { error: "Unauthorized" };
+  }
+
+  try {
+    const res = await axios.delete(
+      `http://localhost:8080/api/food/food/${foodId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.error("Error deleting food", err);
+    return { error: "Failed to delete food" };
+  }
+}
+

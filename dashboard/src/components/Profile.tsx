@@ -12,7 +12,10 @@ const Profile = (props: any) => {
           @{user.name}
         </p>
       </div>
-      <div className="w-11 h-11 bg-slate-300 rounded-4xl bg-center bg-cover cursor-pointer" style={{ backgroundImage: `url(${user.profile})` }}></div>
+      <div
+        className="w-11 h-11 bg-slate-300 rounded-4xl bg-center bg-cover cursor-pointer"
+        style={{ backgroundImage: `url(${user.profile})` }}
+      ></div>
     </div>
   );
 };

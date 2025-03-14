@@ -39,8 +39,6 @@ const Header = async () => {
     redirect("/auth/sign-in");
   }
 
-  console.log(user.data, "HELLO");
-
   return (
     <>
       <div className="w-full h-24 flex flex-row justify-between items-center gap-6 px-10">
