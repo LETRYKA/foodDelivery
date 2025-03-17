@@ -363,6 +363,8 @@ export const columns: ColumnDef<Payment>[] = [
               <DropdownMenuItem
                 className="text-destructive"
                 onClick={async () => {
+                  if (!confirm("Are you sure you want to delete this order?"))
+                    return;
                   try {
                     await deleteOrder({ orderId: row.original._id });
                     table.options.meta?.updateData((old: Payment[]) =>
@@ -543,10 +545,7 @@ const TableOrder = ({ orders }: { orders: { data: Payment[] } }) => {
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className="py-4 border-transparent"
-                    >
+                    <TableCell key={cell.id} className="py-4 border-transparent">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

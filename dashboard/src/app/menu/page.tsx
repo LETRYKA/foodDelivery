@@ -1,19 +1,43 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
-import { fetchFoods } from "@/lib/api";
-import { useEffect, useState } from "react";
-import { EditDrawer } from "@/components/EditDrawer";
-import { Trash2 } from "lucide-react";
-import { CreateDialog } from "@/components/CreateDialog";
-import { deleteFoodById } from "@/lib/api";
-import { toast } from "sonner";
 import FoodSkeleton from "@/components/Skeleton/FoodSkeleton";
+import { deleteFoodById, fetchCategory } from "@/lib/api";
+import { CreateDialog } from "@/components/CreateDialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { EditDrawer } from "@/components/EditDrawer";
+import { useEffect, useState } from "react";
+import { fetchFoods } from "@/lib/api";
+import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
+
+interface Category {
+  name: string;
+}
+
+interface DataType {
+  _id: string;
+  price: number;
+  image: string;
+  foodName: string;
+  description: string;
+}
 
 const Menu = () => {
-  const [foodsData, setFoodsData] = useState([]);
+  const [foodsData, setFoodsData] = useState<DataType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [error, setError] = useState("");
+
+  const getCategories = async () => {
+    setIsLoading(true);
+    try {
+      const category = await fetchCategory();
+      setCategories(category.data || []);
+      setIsLoading(false);
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
 
   const getFoods = async () => {
     setIsLoading(true);
@@ -21,12 +45,12 @@ const Menu = () => {
       const foods = await fetchFoods();
       setFoodsData(foods?.data || []);
       setIsLoading(false);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message);
     }
   };
 
-  const deleteFood = async (id) => {
+  const deleteFood = async (id: string) => {
     try {
       await deleteFoodById({
         foodId: id,
@@ -39,32 +63,31 @@ const Menu = () => {
   };
 
   useEffect(() => {
+    getCategories();
     getFoods();
   }, []);
 
   return (
     <div className="w-full h-[90%] flex flex-col items-center px-10 gap-7">
       <div className="w-full h-full flex flex-row items-start gap-7">
-        <div className="w-1/6 h-96 bg-[var(--background)] rounded-[var(--radius)] py-4 px-6">
+        <div className="w-1/6 h-auto bg-[var(--background)] rounded-[var(--radius)] py-4 px-6 pb-10">
           <CreateDialog dataRefresh={getFoods} />
           <p className="text-lg font-semibold">Filters</p>
           <div className="flex flex-col mt-4 gap-4">
             <p className="text-sm text-[var(--foreground)]/30 font-regular -mb-1">
               Categories
             </p>
-            {Array(4)
-              .fill()
-              .map((_, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <Checkbox id={`terms-${index}`} />
-                  <label
-                    htmlFor={`terms-${index}`}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    New
-                  </label>
-                </div>
-              ))}
+            {categories.map((category, index) => (
+              <div key={index} className="flex items-center space-x-2">
+                <Checkbox id={`terms-${index}`} />
+                <label
+                  htmlFor={`terms-${index}`}
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  {category?.name}
+                </label>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -108,7 +131,11 @@ const Menu = () => {
                       Breakfast, Fast
                     </p>
                   </div>
-                  <EditDrawer foodId={food?._id} dataRefresh={getFoods} />
+                  <EditDrawer
+                    foodId={food?._id}
+                    Category={categories}
+                    dataRefresh={getFoods}
+                  />
                 </div>
               ))
             ) : (

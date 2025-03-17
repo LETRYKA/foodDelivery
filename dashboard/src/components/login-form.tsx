@@ -33,7 +33,7 @@ export function LoginForm({
       setIsLoading(false);
       router.push("/dashboard");
       console.log(res);
-    } catch (err) {
+    } catch (err: any) {
       setIsLoading(false);
       toast.error(err.response?.data?.message);
       console.error(err);

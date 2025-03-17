@@ -5,16 +5,15 @@ const UPLOAD_PRESET = process.env.NEXT_PUBLIC_UPLOAD_PRESET;
 
 import * as React from "react";
 import { fetchFoodById, PatchFoodById } from "@/lib/api";
-import { ArrowUpRight, ImageUp, Loader2 } from "lucide-react";
+import { ArrowUpRight, ChevronDown, ImageUp, Loader2 } from "lucide-react";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -29,6 +28,7 @@ import { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { toast } from "sonner";
+import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 
 interface FoodData {
   description: string;
@@ -38,7 +38,15 @@ interface FoodData {
   image: string;
 }
 
-export function EditDrawer({ foodId, dataRefresh }: Props) {
+interface Props {
+  foodId: string;
+  dataRefresh: () => void;
+  Category: any;
+}
+
+type Checked = DropdownMenuCheckboxItemProps["checked"];
+
+export function EditDrawer({ foodId, dataRefresh, Category }: Props) {
   const [loading, setLoading] = useState(false);
   const [foodData, setFoodData] = useState<FoodData | null>(null);
   const [inputData, setInputData] = useState({
@@ -46,7 +54,10 @@ export function EditDrawer({ foodId, dataRefresh }: Props) {
     foodPrice: "",
     foodDescription: "",
     foodImage: "",
+    Category: [],
   });
+
+  console.log(inputData);
 
   const updateFoodData = async () => {
     if (!foodData) return;
@@ -69,6 +80,7 @@ export function EditDrawer({ foodId, dataRefresh }: Props) {
         foodPrice: Number(inputData.foodPrice),
         foodDescription: inputData.foodDescription,
         foodImage: inputData.foodImage,
+        Category: inputData.Category,
       });
       dataRefresh();
       toast.success("Successfully updated food!");
@@ -91,12 +103,12 @@ export function EditDrawer({ foodId, dataRefresh }: Props) {
 
     const data = new FormData();
     data.append("file", image);
-    data.append("upload_preset", UPLOAD_PRESET);
+    data.append("upload_preset", UPLOAD_PRESET || "presets not found");
 
     try {
       setLoading(true);
 
-      const res = await fetch(CLOUDINARY_URL, {
+      const res = await fetch(CLOUDINARY_URL || "url not found", {
         method: "POST",
         body: data,
       });
@@ -111,6 +123,21 @@ export function EditDrawer({ foodId, dataRefresh }: Props) {
       setLoading(false);
     }
   };
+
+  // const handleCategoryChange = (categoryId, checked) => {
+  //   setInputData((prevState) => {
+  //     const newCategoryIds = Array.isArray(prevState.categoryIds)
+  //       ? checked
+  //         ? [...prevState.categoryIds, categoryId]
+  //         : prevState.categoryIds.filter((id) => id !== categoryId)
+  //       : [];
+
+  //     return {
+  //       ...prevState,
+  //       categoryIds: newCategoryIds,
+  //     };
+  //   });
+  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -131,6 +158,7 @@ export function EditDrawer({ foodId, dataRefresh }: Props) {
         foodPrice: foodData.price.toString(),
         foodDescription: foodData.description,
         foodImage: foodData.image,
+        Category: foodData.categories,
       });
     }
   }, [foodData]);
@@ -216,21 +244,30 @@ export function EditDrawer({ foodId, dataRefresh }: Props) {
                   onChange={handleTextareaChange}
                   required
                 />
-                <Select>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Category</SelectLabel>
-                      <SelectItem value="apple">Apple</SelectItem>
-                      <SelectItem value="banana">Banana</SelectItem>
-                      <SelectItem value="blueberry">Blueberry</SelectItem>
-                      <SelectItem value="grapes">Grapes</SelectItem>
-                      <SelectItem value="pineapple">Pineapple</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                {/* <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="flex justify-start">
+                      Category <ChevronDown />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-56">
+                    <DropdownMenuSeparator />
+                    {categories.map((category) => (
+                      <DropdownMenuCheckboxItem
+                        key={category._id}
+                        checked={
+                          Array.isArray(inputData.categoryIds) &&
+                          inputData.categoryIds.includes(category._id)
+                        } // Check if categoryId is in the array
+                        onCheckedChange={(checked) =>
+                          handleCategoryChange(category._id, checked)
+                        }
+                      >
+                        {category.name}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu> */}
               </form>
             </div>
           </div>

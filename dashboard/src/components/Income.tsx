@@ -4,9 +4,24 @@ import { BuildingLibraryIcon } from "@heroicons/react/16/solid";
 import { Ellipsis } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const Income = (props: any) => {
+interface Order {
+  status: string;
+  user: {
+    profile: string;
+    name: string;
+  };
+  items: any[];
+  totalPrice: number;
+  createdAt: string;
+}
+
+interface Orders {
+  data: Order[];
+}
+
+const Income = (props: { orders: Orders }) => {
   const { orders } = props;
-  const [orderData, setOrderData] = useState([]);
+  const [orderData, setOrderData] = useState<Order[]>([]);
 
   useEffect(() => {
     setOrderData(orders.data);
@@ -15,7 +30,7 @@ const Income = (props: any) => {
   return (
     <>
       <div className="w-full flex justify-between items-center mt-5">
-        <p className="text-lg font-medium text-[var(--foreground)] flex item-scenter gap-1">
+        <p className="text-lg font-medium text-[var(--foreground)] flex item-center gap-1">
           <BuildingLibraryIcon className="fill-[var(--primary)]" width={17} />{" "}
           Income
         </p>

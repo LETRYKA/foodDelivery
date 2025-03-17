@@ -158,11 +158,13 @@ export async function CreateFood({
   foodPrice,
   foodDescription,
   foodImage,
+  categoryId,
 }: {
   foodName: string;
   foodPrice: number;
   foodDescription: string;
   foodImage: string;
+  categoryId: [];
 }) {
   const token = (await cookies()).get("token")?.value;
 
@@ -190,7 +192,6 @@ export async function CreateFood({
   }
 }
 
-
 export async function deleteFoodById({ foodId }: { foodId: string }) {
   const token = (await cookies()).get("token")?.value;
 
@@ -212,3 +213,91 @@ export async function deleteFoodById({ foodId }: { foodId: string }) {
   }
 }
 
+// CATEGORY API
+
+export async function fetchCategory() {
+  const token = (await cookies()).get("token")?.value;
+
+  if (!token) {
+    return { error: "Unauthorized" };
+  }
+
+  try {
+    const res = await axios.get(
+      "http://localhost:8080/api/food/food-category",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching categories:", err);
+    return { error: "Failed to fetch category" };
+  }
+}
+
+export async function createCategory({ name }: { name: string }) {
+  const token = (await cookies()).get("token")?.value;
+
+  if (!token) {
+    return { error: "Unauthorized" };
+  }
+
+  try {
+    const res = await axios.post(
+      `http://localhost:8080/api/food/food-category}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.error("Error deleting order:", err);
+    return { error: "Failed to delete order" };
+  }
+}
+
+export async function editCategory({ id, name }: { id: string; name: string }) {
+  const token = (await cookies()).get("token")?.value;
+
+  if (!token) {
+    return { error: "Unauthorized" };
+  }
+
+  try {
+    const res = await axios.patch(
+      `http://localhost:8080/api/food/food-category${id}`,
+      {
+        name,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.error("Error patching category:", err);
+    return { error: "Failed to create category" };
+  }
+}
+
+export async function deleteCategory({ id }: { id: string }) {
+  const token = (await cookies()).get("token")?.value;
+
+  if (!token) {
+    return { error: "Unauthorized" };
+  }
+
+  try {
+    const res = await axios.delete(
+      `http://localhost:8080/api/food/food-category${id}}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.error("Error deleting category:", err);
+    return { error: "Failed to delete category" };
+  }
+}
