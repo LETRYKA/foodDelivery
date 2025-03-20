@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import NavBar from "@/components/mobile/NavBar";
-import "../globals.css";
+import "@/app/globals.css";
 
 import { Manrope } from "next/font/google";
 
@@ -22,13 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning>
-        {children}
-        <div className="fixed bottom-7 w-full flex justify-center items-center z-50">
-          <NavBar />
-        </div>
-      </body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }
-
