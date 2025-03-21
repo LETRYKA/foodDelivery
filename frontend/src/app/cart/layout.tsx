@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body suppressHydrationWarning>
+      <body suppressHydrationWarning className="bg-white">
         {children}
         <div className="fixed bottom-7 w-full flex justify-center items-center z-50">
           <NavBar />

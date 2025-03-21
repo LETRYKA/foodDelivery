@@ -1,4 +1,4 @@
-import React from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Heart,
@@ -54,10 +54,12 @@ const Profile = () => {
           not verified
         </div>
         <div className="w-full flex flex-row justify-between items-center mt-10 px-5 gap-2">
-          <Button className="flex-grow py-6 rounded-full">
-            <ReceiptText />
-            Orders
-          </Button>
+          <Link href="/orders" className="flex-grow">
+            <Button className="w-full flex-grow py-6 rounded-full">
+              <ReceiptText />
+              Orders
+            </Button>
+          </Link>
           <Button className="w-auto aspect-square py-6 rounded-full">
             <Heart />
           </Button>

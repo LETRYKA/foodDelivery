@@ -27,12 +27,33 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Clock2, Minus, Plus } from "lucide-react";
-import { useState } from "react";
+import { Minus, Plus, ShoppingCart } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const InfoDrawer = (props: any) => {
   const { food } = props;
   const [foodData, setFoodData] = useState(food);
+  const [quantity, setQuantity] = useState(1);
+  const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart") || "[]");
+  console.log(cartFromLocalStorage);
+  const [cart, setCart] = useState(cartFromLocalStorage);
+
+  const addToCart = () => {
+    setCart([...cart, { food: foodData, quantity }]);
+  };
+
+  function onClick(adjustment: number) {
+    setQuantity(Math.max(0, Math.min(400, quantity + adjustment)));
+  }
+  const formattedPrice = new Intl.NumberFormat("mn-MN", {
+    style: "decimal",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(quantity * food.price);
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   return (
     <div className="dark z-40 w-full">
@@ -56,7 +77,7 @@ const InfoDrawer = (props: any) => {
             </div>
           </div>
         </DrawerTrigger>
-        <DrawerContent className="w-full h-full bg-black border-none shadow-none">
+        <DrawerContent className="w-full h-[1500px] bg-black border-none shadow-none">
           <DrawerTitle></DrawerTitle>
           <div className="mx-auto w-full px-5 mt-5">
             <div className="w-full h-auto aspect-square bg-[#101010] rounded-2xl bg-cover bg-top flex justify-between relative overflow-hidden">
@@ -79,9 +100,25 @@ const InfoDrawer = (props: any) => {
             <div className="w-full flex flex-row justify-between bg-[var(--background)]/10 px-5 py-4 rounded-2xl mt-5">
               <p className="text-sm text-[var(--background)]">Servings</p>
               <div className="flex flex-row justify-center items-center gap-3">
-                <Minus width={20} stroke="grey" cursor="pointer" />
-                <p className="text-sm text-[var(--background)]">4</p>
-                <Plus width={20} stroke="grey" cursor="pointer" />
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-5 w-5 shrink-0 rounded-full"
+                  onClick={() => onClick(-1)}
+                  disabled={quantity <= 1}
+                >
+                  <Minus className="size-3" />
+                </Button>
+                <p className="text-sm text-[var(--background)]">{quantity}</p>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="w-5 h-5 shrink-0 rounded-full"
+                  onClick={() => onClick(1)}
+                  disabled={quantity >= 400}
+                >
+                  <Plus className="size-3" />
+                </Button>
               </div>
             </div>
             <Tabs defaultValue="overview" className="w-full mt-4 dark">
@@ -125,7 +162,16 @@ const InfoDrawer = (props: any) => {
                 </Card>
               </TabsContent>
             </Tabs>
-            <DrawerFooter></DrawerFooter>
+            <DrawerFooter className="w-full p-0 mt-6">
+              <DrawerClose asChild>
+                <Button
+                  className="w-full py-6 rounded-full cursor-pointer"
+                  onClick={() => addToCart()}
+                >
+                  <ShoppingCart /> Cart {formattedPrice}₮
+                </Button>
+              </DrawerClose>
+            </DrawerFooter>
           </div>
         </DrawerContent>
       </Drawer>
