@@ -5,6 +5,7 @@ import Header from "@/components/mobile/Header";
 import { Button } from "@/components/ui/button";
 import { fetchFood, fetchCategory } from "@/lib/api";
 import { useEffect, useState } from "react";
+import { CartProvider } from "@/lib/CartContext";
 
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -17,9 +18,13 @@ import {
 import { Input } from "@/components/ui/input";
 import InfoDrawer from "@/components/mobile/infoDrawer";
 
+interface CategoryType {
+  name: string;
+}
+
 export default function Home() {
   const [foodData, setFoodData] = useState([]);
-  const [category, setCategory] = useState([]);
+  const [category, setCategory] = useState<CategoryType[]>([]);
 
   useEffect(() => {
     fetchFood().then((data) => {
@@ -93,9 +98,11 @@ export default function Home() {
           </CarouselContent>
         </Carousel>
         <div className="w-full flex flex-col justify-center items-center mt-7 gap-4">
-          {foodData.map((food, index) => (
-            <InfoDrawer key={index} food={food} />
-          ))}
+          <CartProvider>
+            {foodData.map((food, index) => (
+              <InfoDrawer key={index} food={food} />
+            ))}
+          </CartProvider>
         </div>
       </div>
     </>

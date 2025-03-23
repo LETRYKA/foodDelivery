@@ -1,5 +1,6 @@
 "use client";
 
+import { useCart } from "@/lib/CartContext";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -32,28 +33,22 @@ import { useEffect, useState } from "react";
 
 const InfoDrawer = (props: any) => {
   const { food } = props;
-  const [foodData, setFoodData] = useState(food);
   const [quantity, setQuantity] = useState(1);
-  const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart") || "[]");
-  console.log(cartFromLocalStorage);
-  const [cart, setCart] = useState(cartFromLocalStorage);
+  const { cart, addToCart } = useCart();
 
-  const addToCart = () => {
-    setCart([...cart, { food: foodData, quantity }]);
+  const handleAddToCart = () => {
+    addToCart({ food, quantity });
   };
 
   function onClick(adjustment: number) {
     setQuantity(Math.max(0, Math.min(400, quantity + adjustment)));
   }
+
   const formattedPrice = new Intl.NumberFormat("mn-MN", {
     style: "decimal",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(quantity * food.price);
-
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
 
   return (
     <div className="dark z-40 w-full">
@@ -166,7 +161,7 @@ const InfoDrawer = (props: any) => {
               <DrawerClose asChild>
                 <Button
                   className="w-full py-6 rounded-full cursor-pointer"
-                  onClick={() => addToCart()}
+                  onClick={handleAddToCart}
                 >
                   <ShoppingCart /> Cart {formattedPrice}₮
                 </Button>
