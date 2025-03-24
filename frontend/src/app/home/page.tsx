@@ -100,7 +100,7 @@ export default function Home() {
         <div className="w-full flex flex-col justify-center items-center mt-7 gap-4">
           <CartProvider>
             {foodData.map((food, index) => (
-              <InfoDrawer key={index} food={food} />
+              <InfoDrawer key={index} foodData={food} isCart={false} />
             ))}
           </CartProvider>
         </div>

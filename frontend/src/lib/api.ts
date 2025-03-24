@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// ORDER API
+// FETCH FOOD
 
 export async function fetchFood() {
   try {
@@ -26,5 +26,22 @@ export async function fetchCategory() {
   } catch (err) {
     console.error("Error fetching food:", err);
     return { error: "Failed to fetch food" };
+  }
+}
+
+// ORDER API
+
+export async function createOrder() {
+  try {
+    const res = await axios.get(
+      "http://localhost:8080/api/food/food-category",
+      {
+        headers: { Authorization: `Bearer` },
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.error("Error post order:", err);
+    return { error: "Failed to post order" };
   }
 }

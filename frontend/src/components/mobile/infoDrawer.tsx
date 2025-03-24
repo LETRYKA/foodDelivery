@@ -28,16 +28,25 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Minus, Plus, ShoppingCart } from "lucide-react";
+import { Minus, Plus, SaveAllIcon, ShoppingCart, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const InfoDrawer = (props: any) => {
-  const { food } = props;
-  const [quantity, setQuantity] = useState(1);
-  const { cart, addToCart } = useCart();
+  const { foodData, isCart } = props;
+  const [food, setFood] = useState();
+  const [quantity, setQuantity] = useState(isCart ? foodData?.quantity : 1);
+  const { cart, addToCart, removeFromCart, updateQuantity } = useCart();
 
   const handleAddToCart = () => {
     addToCart({ food, quantity });
+  };
+
+  const handleDelete = () => {
+    removeFromCart(food?._id);
+  };
+
+  const handleUpdate = () => {
+    updateQuantity(food?._id, quantity);
   };
 
   function onClick(adjustment: number) {
@@ -48,8 +57,15 @@ const InfoDrawer = (props: any) => {
     style: "decimal",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(quantity * food.price);
+  }).format(quantity * food?.price);
 
+  useEffect(() => {
+    if (isCart) {
+      setFood(foodData?.food);
+    } else {
+      setFood(foodData);
+    }
+  }, []);
   return (
     <div className="dark z-40 w-full">
       <Drawer>
@@ -58,16 +74,20 @@ const InfoDrawer = (props: any) => {
             <div
               className="h-full w-auto bg-slate-200 aspect-square bg-cover bg-center rounded-[var(--radius)]"
               style={{
-                backgroundImage: `url(${food.image})`,
+                backgroundImage: `url(${food?.image})`,
               }}
             ></div>
             <div>
-              <p className="text-base font-bold">{food.foodName}</p>
+              <p className="text-base font-bold">{food?.foodName}</p>
               <p className="text-xs h-8 overflow-hidden text-[var(--background)]/30">
-                {food.description}
+                {food?.description}
               </p>
               <div className="bg-[#4FAF5A] w-20 p-1 rounded-full flex justify-center items-center mt-2">
-                <p className="text-xs text-white">from {food.price}$</p>
+                <p className="text-xs text-white">
+                  {isCart
+                    ? `${foodData.quantity * food?.price}₮`
+                    : `from ${food?.price}₮`}
+                </p>
               </div>
             </div>
           </div>
@@ -77,7 +97,7 @@ const InfoDrawer = (props: any) => {
           <div className="mx-auto w-full px-5 mt-5">
             <div className="w-full h-auto aspect-square bg-[#101010] rounded-2xl bg-cover bg-top flex justify-between relative overflow-hidden">
               <img
-                src={food.image}
+                src={food?.image}
                 className="absolute w-full h-full object-cover rounded-2xl z-0 [mask-image:linear-gradient(to_top,#000_0%,transparent_100%)]"
               />
               <div className="flex flex-col z-10 p-5 gap-2">
@@ -85,11 +105,11 @@ const InfoDrawer = (props: any) => {
                   RECIPE OF THE DAY
                 </p>
                 <p className="text-2xl text-[var(--background)]/100 leading-7">
-                  {food.foodName}
+                  {food?.foodName}
                 </p>
               </div>
               <div className="bg-[#4FAF5A]/40 w-20 h-7 p-1 rounded-full flex justify-center items-center mt-5 mr-4">
-                <p className="text-xs text-white">from {food.price}₮</p>
+                <p className="text-xs text-white">from {food?.price}₮</p>
               </div>
             </div>
             <div className="w-full flex flex-row justify-between bg-[var(--background)]/10 px-5 py-4 rounded-2xl mt-5">
@@ -128,7 +148,7 @@ const InfoDrawer = (props: any) => {
                   </CardHeader>
                   <CardContent className="space-y-2 -mt-4">
                     <p className="text-sm text-white/40 leading-6">
-                      {food.description}
+                      {food?.description}
                     </p>
                   </CardContent>
                 </Card>
@@ -158,14 +178,36 @@ const InfoDrawer = (props: any) => {
               </TabsContent>
             </Tabs>
             <DrawerFooter className="w-full p-0 mt-6">
-              <DrawerClose asChild>
-                <Button
-                  className="w-full py-6 rounded-full cursor-pointer"
-                  onClick={handleAddToCart}
-                >
-                  <ShoppingCart /> Cart {formattedPrice}₮
-                </Button>
-              </DrawerClose>
+              {!isCart && (
+                <DrawerClose asChild>
+                  <Button
+                    className="w-full py-6 rounded-full cursor-pointer"
+                    onClick={handleAddToCart}
+                  >
+                    <ShoppingCart /> Cart {formattedPrice}₮
+                  </Button>
+                </DrawerClose>
+              )}
+              {isCart && (
+                <>
+                  <DrawerClose asChild>
+                    <Button
+                      className="w-full py-6 rounded-full"
+                      onClick={handleUpdate}
+                    >
+                      <SaveAllIcon /> Save Changes
+                    </Button>
+                  </DrawerClose>
+                  <DrawerClose asChild>
+                    <Button
+                      className="w-full py-6 rounded-full bg-[var(--destructive)] hover:bg-[var(--destructive)]/80"
+                      onClick={handleDelete}
+                    >
+                      <Trash2 /> Delete
+                    </Button>
+                  </DrawerClose>
+                </>
+              )}
             </DrawerFooter>
           </div>
         </DrawerContent>

@@ -1,10 +1,21 @@
 import { Bell, MapPin, Search, Settings2, ShoppingBasket } from "lucide-react";
 import Link from "next/link";
 import { Input } from "../ui/input";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useCart } from "@/lib/CartContext";
 
 const Header = () => {
-  // const cartFromLocalStorage = JSON.parse(localStorage.getItem("cart") || "[]");
+  const [cart, setCart] = useState([]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const cartFromLocalStorage = JSON.parse(
+        localStorage.getItem("cart") || "[]"
+      );
+      setCart(cartFromLocalStorage);
+      console.log(cartFromLocalStorage);
+    }
+  }, []);
 
   return (
     <div className="w-full p-5">
@@ -25,11 +36,11 @@ const Header = () => {
           <Link href="/cart">
             <div className="w-10 h-10 bg-[var(--background)]/10 rounded-full flex justify-center items-center cursor-pointer relative">
               <ShoppingBasket stroke="white" width={16} />
-              {/* {cartFromLocalStorage.length > 0 && (
+              {cart.length > 0 && (
                 <div className="absolute -right-2 -top-1 w-5 h-5 bg-[#4FAF5A] rounded-full flex justify-center items-center text-xs text-white">
-                  {cartFromLocalStorage.length}
+                  {cart.length}
                 </div>
-              )} */}
+              )}
             </div>
           </Link>
         </div>
