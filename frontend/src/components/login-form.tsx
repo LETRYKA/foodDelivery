@@ -31,7 +31,7 @@ export function LoginForm({
         { withCredentials: true }
       );
       setIsLoading(false);
-      router.push("/dashboard");
+      router.push("/home");
       console.log(res);
     } catch (err: any) {
       setIsLoading(false);

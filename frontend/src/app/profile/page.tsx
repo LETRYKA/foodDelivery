@@ -1,11 +1,10 @@
-"use client";
-
 import Link from "next/link";
+import { InfoCard } from "./_components/InfoCard";
 import { Button } from "@/components/ui/button";
+import EditDrawer from "./_components/EditDrawer";
 import {
   Heart,
   MapPin,
-  Pencil,
   Phone,
   ReceiptText,
   UserRound,
@@ -24,8 +23,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { fetchCurrentUser } from "@/lib/api";
 
-const Profile = () => {
+const Profile = async () => {
+  const cookieStore = cookies();
+  const token = (await cookieStore).get("token")?.value;
+  const user = token ? await fetchCurrentUser(token) : null;
+
+  if (!user) {
+    redirect("/auth/sign-in");
+  }
+
   return (
     <>
       <div className="w-full flex flex-col justify-center items-center pb-30">
@@ -42,7 +52,7 @@ const Profile = () => {
         <div
           className="w-28 h-auto aspect-square bg-slate-300 rounded-full -mt-14 border-5 border-[#101010] bg-cover bg-center relative overflow-hidden group"
           style={{
-            backgroundImage: `url(https://static01.nyt.com/images/2023/05/19/multimedia/19nba-morant-folo-11-thkc/19nba-morant-folo-11-thkc-mediumSquareAt3X.jpg)`,
+            backgroundImage: `url(${user.data.profile})`,
           }}
         >
           <div className="absolute w-full h-full bg-black/40 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer">
@@ -50,10 +60,10 @@ const Profile = () => {
           </div>
         </div>
         <p className="text-lg text-[var(--background)] font-bold mt-4">
-          @Ja Morant
+          @{user.data.name}
         </p>
         <div className="text-xs text-[var(--background)] bg-slate-600 rounded-full px-2 py-1 mt-2">
-          not verified
+          {user.data.isVerified ? "verified" : "not verified"}
         </div>
         <div className="w-full flex flex-row justify-between items-center mt-10 px-5 gap-2">
           <Link href="/orders" className="flex-grow">
@@ -71,40 +81,36 @@ const Profile = () => {
         </div>
         <div className="w-full mt-10 px-5 dark flex flex-col gap-5">
           <Card className="w-full bg-[#141414] gap-6">
-            <CardContent className="flex flex-row justify-between">
-              <div className="flex justify-center items-center gap-3">
-                <UserRound width={18} />
-                <p className="text-sm text-white/60">JaMorant</p>
-              </div>
-              <Pencil width={14} stroke="grey" cursor="pointer" />
-            </CardContent>
-            <CardContent className="flex flex-row justify-between">
-              <div className="flex justify-center items-center gap-3">
-                <Phone width={18} />
-                <p className="text-sm text-white/60">9999-3333</p>
-              </div>
-              <Pencil width={14} stroke="grey" cursor="pointer" />
-            </CardContent>
-            <CardContent className="flex flex-row justify-between">
-              <div className="flex justify-center items-center gap-3">
-                <Mail width={18} />
-                <p className="text-sm text-white/60">ja@mail.com</p>
-              </div>
-              <Pencil width={14} stroke="grey" cursor="pointer" />
-            </CardContent>
-            <CardContent className="flex flex-row justify-between">
-              <div className="flex justify-center items-center gap-3">
-                <Lock width={18} />
-                <p className="text-sm text-white/60">Password</p>
-              </div>
-              <Pencil width={14} stroke="grey" cursor="pointer" />
-            </CardContent>
+            <InfoCard
+              icon={UserRound}
+              text={`@${user.data.name}`}
+              type={`Username`}
+              user={user}
+            />
+            <InfoCard
+              icon={Phone}
+              text={user.data.phoneNumber}
+              type={`Phone`}
+              user={user}
+            />
+            <InfoCard
+              icon={Mail}
+              text={user.data.email}
+              type={`Email`}
+              user={user}
+            />
+            <InfoCard
+              icon={Lock}
+              text="Password"
+              type={`Password`}
+              user={user}
+            />
           </Card>
           <Card className="w-full bg-[#141414]">
             <CardHeader>
               <CardTitle className="text-sm">ADDRESS</CardTitle>
               <CardDescription className="text-xs">
-                3517 Washington Ave
+                {user.data.address}
               </CardDescription>
             </CardHeader>
             <CardContent className="px-5">

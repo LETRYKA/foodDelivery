@@ -2,6 +2,7 @@
 import { Manrope } from "next/font/google";
 import NavBar from "@/components/mobile/NavBar";
 import "@/app/globals.css";
+import { Toaster } from "sonner";
 
 const manRope = Manrope({
   subsets: ["latin"],
@@ -16,6 +17,7 @@ export default function MobileLayout({
 }) {
   return (
     <div className={manRope.variable}>
+      <Toaster position="bottom-right" richColors />
       {children}
       <div className="fixed bottom-7 w-full flex justify-center items-center z-50">
         <NavBar />
