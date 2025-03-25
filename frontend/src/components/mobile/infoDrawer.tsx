@@ -32,7 +32,7 @@ import { Minus, Plus, SaveAllIcon, ShoppingCart, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const InfoDrawer = (props: any) => {
-  const { foodData, isCart } = props;
+  const { foodData, isCart, key } = props;
   const [food, setFood] = useState();
   const [quantity, setQuantity] = useState(isCart ? foodData?.quantity : 1);
   const { cart, addToCart, removeFromCart, updateQuantity } = useCart();
@@ -70,7 +70,7 @@ const InfoDrawer = (props: any) => {
     <div className="dark z-40 w-full">
       <Drawer>
         <DrawerTrigger asChild>
-          <div className="w-full h-32 bg-[var(--foreground)]/5 rounded-[var(--radius)] flex flex-row justify-start items-center overflow-hidden gap-4 pr-3 border border-[var(--border)]/10 cursor-pointer">
+          <div key={key} className="w-full h-32 bg-[var(--foreground)]/5 rounded-[var(--radius)] flex flex-row justify-start items-center overflow-hidden gap-4 pr-3 border border-[var(--border)]/10 cursor-pointer">
             <div
               className="h-full w-auto bg-slate-200 aspect-square bg-cover bg-center rounded-[var(--radius)]"
               style={{
@@ -82,12 +82,19 @@ const InfoDrawer = (props: any) => {
               <p className="text-xs h-8 overflow-hidden text-[var(--background)]/30">
                 {food?.description}
               </p>
-              <div className="bg-[#4FAF5A] w-20 p-1 rounded-full flex justify-center items-center mt-2">
-                <p className="text-xs text-white">
-                  {isCart
-                    ? `${foodData.quantity * food?.price}₮`
-                    : `from ${food?.price}₮`}
-                </p>
+              <div className="flex gap-2 h-7">
+                <div className="bg-[#4FAF5A] h-full w-20 p-1 rounded-full flex justify-center items-center mt-2">
+                  <p className="text-xs text-white">
+                    {isCart
+                      ? `${foodData.quantity * food?.price}₮`
+                      : `from ${food?.price}₮`}
+                  </p>
+                </div>
+                {isCart && (
+                  <div className="bg-[#4FAF5A] h-full w-auto aspect-square p-1 rounded-full flex justify-center items-center mt-2">
+                    <p className="text-xs text-white">{quantity}x</p>
+                  </div>
+                )}
               </div>
             </div>
           </div>

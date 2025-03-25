@@ -1,22 +1,36 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import axios from "axios";
 
-// USER API
-
-export const fetchCurrentUser = async (token: string) => {
+// Fetch Current User
+export async function fetchCurrentUser() {
   try {
+    const token = cookies().get("token")?.value;
+    if (!token) return null;
+
     const res = await axios.get("http://localhost:8080/api/users/me", {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     });
     return res.data;
   } catch (err) {
+    console.error("Error fetching current user:", err);
     return null;
   }
-};
+}
 
+// Check User
+export async function checkUserSession() {
+  const user = await fetchCurrentUser();
+  if (!user) {
+    redirect("/auth/sign-in");
+  }
+  return user;
+}
+
+// Update User
 export async function PatchUser({
   Username,
   Phone,
@@ -32,11 +46,8 @@ export async function PatchUser({
   Address: string;
   userId: string;
 }) {
-  const token = (await cookies()).get("token")?.value;
-
-  if (!token) {
-    return { error: "Unauthorized" };
-  }
+  const token = cookies().get("token")?.value;
+  if (!token) return { error: "Unauthorized" };
 
   try {
     const res = await axios.put(
@@ -54,17 +65,19 @@ export async function PatchUser({
     );
     return res.data;
   } catch (err) {
-    console.error("Error patching food:", err);
-    return { error: "Failed to patch food" };
+    console.error("Error updating user:", err);
+    return { error: "Failed to update user" };
   }
 }
 
-// FETCH FOOD
-
+// Fetch Food
 export async function fetchFood() {
+  const token = cookies().get("token")?.value;
+  if (!token) return { error: "Unauthorized" };
+
   try {
     const res = await axios.get("http://localhost:8080/api/food/food", {
-      headers: { Authorization: `Bearer` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
   } catch (err) {
@@ -73,41 +86,60 @@ export async function fetchFood() {
   }
 }
 
+// Fetch Food Categories
 export async function fetchCategory() {
+  const token = cookies().get("token")?.value;
+  if (!token) return { error: "Unauthorized" };
+
   try {
     const res = await axios.get(
       "http://localhost:8080/api/food/food-category",
       {
-        headers: { Authorization: `Bearer` },
+        headers: { Authorization: `Bearer ${token}` },
       }
     );
     return res.data;
   } catch (err) {
-    console.error("Error fetching food:", err);
-    return { error: "Failed to fetch food" };
+    console.error("Error fetching food categories:", err);
+    return { error: "Failed to fetch food categories" };
   }
 }
 
-// ORDER API
-
-export async function CreateOrder({
-  userId,
-  items,
-}: {
-  userId: string;
-  items: [];
-}) {
-  const token = (await cookies()).get("token")?.value;
-
-  if (!token) {
-    return { error: "Unauthorized" };
-  }
+// Fetch User Orders
+export async function fetchOrder() {
+  const token = cookies().get("token")?.value;
+  if (!token) return { error: "Unauthorized" };
 
   try {
-    const res = await axios.put(
-      `http://localhost:8080/api/food/food-order`,
+    const user = await fetchCurrentUser();
+    if (!user) return { error: "Unauthorized" };
+
+    const res = await axios.get(
+      `http://localhost:8080/api/food/food-order/${user.data._id}`,
       {
-        userId: userId,
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching order:", err);
+    return { error: "Failed to fetch order" };
+  }
+}
+
+// Create Order
+export async function CreateOrder({ items }: { items: any[] }) {
+  const token = cookies().get("token")?.value;
+  if (!token) return { error: "Unauthorized" };
+
+  try {
+    const user = await fetchCurrentUser();
+    if (!user) return { error: "Unauthorized" };
+
+    const res = await axios.post(
+      "http://localhost:8080/api/food/food-order",
+      {
+        userId: user.data._id,
         items: items,
       },
       {
@@ -116,7 +148,7 @@ export async function CreateOrder({
     );
     return res.data;
   } catch (err) {
-    console.error("Error creating order", err);
+    console.error("Error creating order:", err);
     return { error: "Failed to create order" };
   }
 }

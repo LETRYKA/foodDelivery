@@ -3,9 +3,19 @@
 import InfoDrawer from "@/components/mobile/infoDrawer";
 import { useEffect, useState } from "react";
 import { CartProvider } from "@/lib/CartContext";
+import { Button } from "@/components/ui/button";
+import { CreditCard } from "lucide-react";
+import { CreateOrder } from "@/lib/api";
+import { toast } from "sonner";
 
 const Cart = () => {
   const [cart, setCart] = useState([]);
+  const [items, setItems] = useState([
+    {
+      items: "",
+      quantity: "",
+    },
+  ]);
 
   const getCartFromLocalStorage = () => {
     const cartFromLocalStorage = JSON.parse(
@@ -13,21 +23,38 @@ const Cart = () => {
     );
     setCart(cartFromLocalStorage);
   };
+  console.log(cart);
+
+  const handleCheckOut = async () => {
+    try {
+      await CreateOrder({
+        items: items,
+      });
+      localStorage.clear();
+      toast.success("Order placed successfully!");
+    } catch (err) {
+      console.error("Error while placing order", err);
+      toast.error("Failed to place order");
+    }
+  };
 
   useEffect(() => {
     getCartFromLocalStorage();
   }, []);
 
+  useEffect(() => {
+    const formattedItems = cart.map((item) => ({
+      foodId: item.food._id,
+      quantity: item.quantity,
+    }));
+    setItems(formattedItems);
+  }, [cart]);
+
   return (
     <>
       <div className="w-full h-screen bg-white">
         <div className="w-full h-full flex flex-col px-5">
-          <div className="w-full flex flex-row justify-center items-center gap-2 mt-5">
-            <div className="flex flex-col justify-center items-center gap-1">
-              <p className="text-sm">Pending</p>
-              <div className="w-8 h-auto aspect-square bg-[var(--foreground)] rounded-full flex justify-center items-center"></div>
-            </div>
-          </div>
+          <div className="w-full flex flex-row justify-center items-center gap-2 mt-5"></div>
           <p className="text-2xl font-semibold mt-10">Cart</p>
           <div className="w-full flex flex-col">
             <div className="w-full flex flex-col justify-center items-center mt-7 gap-4">
@@ -36,6 +63,12 @@ const Cart = () => {
                   <InfoDrawer key={index} foodData={food} isCart={true} />
                 ))}
               </CartProvider>
+              {cart.length < 0 && (
+                <Button className="w-full py-6 mt-8" onClick={handleCheckOut}>
+                  <CreditCard />
+                  Checkout
+                </Button>
+              )}
             </div>
           </div>
         </div>
