@@ -9,10 +9,14 @@ import "dotenv/config";
 
 const app = express();
 
-app.use(cors({ origin: "*", credentials: false }));
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
 app.use(express.json());
 
-// Connect to MongoDB
 await connectToDatabase();
 mongoose.connect(process.env.MONGODB_STRING);
 
