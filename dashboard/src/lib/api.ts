@@ -3,6 +3,9 @@
 import { cookies } from "next/headers";
 import axios from "axios";
 
+// GET API URL
+const API_URL = process.env.API_URL;
+
 // ORDER API
 
 export async function fetchOrders() {
@@ -13,7 +16,7 @@ export async function fetchOrders() {
   }
 
   try {
-    const res = await axios.get("http://localhost:8080/api/food/food-order", {
+    const res = await axios.get(`${API_URL}/api/food/food-order`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
@@ -38,7 +41,7 @@ export async function updateStatus({
 
   try {
     const res = await axios.patch(
-      `http://localhost:8080/api/food/food-order/${orderId}`,
+      `${API_URL}api/food/food-order/${orderId}`,
       { status: newStatus },
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -58,7 +61,7 @@ export async function deleteOrder({ orderId }: { orderId: string }) {
 
   try {
     const res = await axios.delete(
-      `http://localhost:8080/api/food/food-order/${orderId}`,
+      `${API_URL}api/food/food-order/${orderId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -80,7 +83,7 @@ export async function fetchFoods() {
   }
 
   try {
-    const res = await axios.get("http://localhost:8080/api/food/food", {
+    const res = await axios.get(`${API_URL}/api/food/food`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
@@ -99,7 +102,7 @@ export async function fetchFoodById({ foodId }: { foodId: string }) {
 
   try {
     const res = await axios.get(
-      `http://localhost:8080/api/food/food/${foodId}`,
+      `${API_URL}/api/food/food/${foodId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -134,7 +137,7 @@ export async function PatchFoodById({
 
   try {
     const res = await axios.patch(
-      `http://localhost:8080/api/food/food/${foodId}`,
+      `${API_URL}/api/food/food/${foodId}`,
       {
         foodName,
         price: foodPrice,
@@ -174,7 +177,7 @@ export async function CreateFood({
 
   try {
     const res = await axios.post(
-      `http://localhost:8080/api/food/food`,
+      `${API_URL}/api/food/food`,
       {
         foodName,
         price: foodPrice,
@@ -201,7 +204,7 @@ export async function deleteFoodById({ foodId }: { foodId: string }) {
 
   try {
     const res = await axios.delete(
-      `http://localhost:8080/api/food/food/${foodId}`,
+      `${API_URL}/api/food/food/${foodId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -224,7 +227,7 @@ export async function fetchCategory() {
 
   try {
     const res = await axios.get(
-      "http://localhost:8080/api/food/food-category",
+      `${API_URL}/api/food/food-category`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -245,7 +248,7 @@ export async function createCategory({ name }: { name: string }) {
 
   try {
     const res = await axios.post(
-      `http://localhost:8080/api/food/food-category}`,
+      `${API_URL}/api/food/food-category}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -266,7 +269,7 @@ export async function editCategory({ id, name }: { id: string; name: string }) {
 
   try {
     const res = await axios.patch(
-      `http://localhost:8080/api/food/food-category${id}`,
+      `${API_URL}/api/food/food-category${id}`,
       {
         name,
       },
@@ -290,7 +293,7 @@ export async function deleteCategory({ id }: { id: string }) {
 
   try {
     const res = await axios.delete(
-      `http://localhost:8080/api/food/food-category${id}}`,
+      `${API_URL}/api/food/food-category${id}}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }

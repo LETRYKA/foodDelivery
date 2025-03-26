@@ -4,13 +4,16 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import axios from "axios";
 
+// GET API URL
+const API_URL = process.env.API_URL;
+
 // Fetch Current User
 export async function fetchCurrentUser() {
   try {
     const token = (await cookies()).get("token")?.value;
     if (!token) return null;
 
-    const res = await axios.get("http://localhost:8080/api/users/me", {
+    const res = await axios.get(`${API_URL}/api/users/me`, {
       headers: { Authorization: `Bearer ${token}` },
       withCredentials: true,
     });
@@ -51,7 +54,7 @@ export async function PatchUser({
 
   try {
     const res = await axios.put(
-      `http://localhost:8080/api/users/${userId}`,
+      `${API_URL}/api/users/${userId}`,
       {
         name: Username,
         email: Email,
@@ -76,7 +79,7 @@ export async function fetchFood() {
   if (!token) return { error: "Unauthorized" };
 
   try {
-    const res = await axios.get("http://localhost:8080/api/food/food", {
+    const res = await axios.get(`${API_URL}/api/food/food`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
@@ -92,12 +95,9 @@ export async function fetchCategory() {
   if (!token) return { error: "Unauthorized" };
 
   try {
-    const res = await axios.get(
-      "http://localhost:8080/api/food/food-category",
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const res = await axios.get(`${API_URL}/api/food/food-category`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return res.data;
   } catch (err) {
     console.error("Error fetching food categories:", err);
@@ -115,7 +115,7 @@ export async function fetchOrder() {
     if (!user) return { error: "Unauthorized" };
 
     const res = await axios.get(
-      `http://localhost:8080/api/food/food-order/${user.data._id}`,
+      `${API_URL}/api/food/food-order/${user.data._id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -137,7 +137,7 @@ export async function CreateOrder({ items }: { items: any[] }) {
     if (!user) return { error: "Unauthorized" };
 
     const res = await axios.post(
-      "http://localhost:8080/api/food/food-order",
+      `${API_URL}/api/food/food-order`,
       {
         userId: user.data._id,
         items: items,

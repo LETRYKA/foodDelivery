@@ -9,7 +9,7 @@ import "dotenv/config";
 
 const app = express();
 
-app.use(cors({ origin: "https://foodapp.vercel.app", credentials: true }));
+app.use(cors({ origin: "localhost:3000", credentials: true }));
 app.use(express.json());
 
 // Connect to MongoDB

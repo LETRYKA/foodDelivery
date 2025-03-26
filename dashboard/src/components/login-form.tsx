@@ -9,6 +9,9 @@ import { cn } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner";
 
+// GET API URL
+const API_URL = process.env.API_URL;
+
 export function LoginForm({
   className,
   ...props
@@ -25,11 +28,9 @@ export function LoginForm({
     e.preventDefault();
     setIsLoading(true);
     try {
-      const res = await axios.post(
-        `http://localhost:8080/api/auth/sign-in`,
-        data,
-        { withCredentials: true }
-      );
+      const res = await axios.post(`http://api-doofplatform.vercel.app/api/auth/sign-in`, data, {
+        withCredentials: true,
+      });
       setIsLoading(false);
       router.push("/dashboard");
       console.log(res);

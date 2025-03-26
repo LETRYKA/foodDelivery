@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { fetchFood, fetchCategory } from "@/lib/api";
 import { useEffect, useState } from "react";
 import { CartProvider } from "@/lib/CartContext";
+const apiUrl = process.env.API_URL;
 
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -34,6 +35,8 @@ export default function Home() {
       setCategory(data.data);
     });
   }, []);
+
+  console.log(apiUrl);
 
   return (
     <>
