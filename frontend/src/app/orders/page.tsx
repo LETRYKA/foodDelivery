@@ -50,7 +50,7 @@ const Orders = () => {
               <CardContent className="w-full h-full flex flex-col">
                 <div className="w-full h-full overflow-scroll flex flex-col-reverse justify-center items-start gap-2">
                   {orders.map((order, index) => (
-                    <DetailDrawer key={index} order={order} />
+                    <DetailDrawer key={String(index)} order={order} />
                   ))}
                 </div>
                 {orders.length <= 0 && (

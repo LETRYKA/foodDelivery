@@ -26,11 +26,12 @@ import {
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { fetchCurrentUser } from "@/lib/api";
+import Cookies from "js-cookie";
 
 const Profile = async () => {
   const cookieStore = cookies();
   const token = (await cookieStore).get("token")?.value;
-  const user = token ? await fetchCurrentUser(token) : null;
+  const user = token ? await fetchCurrentUser() : null;
 
   if (!user) {
     redirect("/auth/sign-in");

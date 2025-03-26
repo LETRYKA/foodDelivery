@@ -1,3 +1,6 @@
-export default function bb() {
-  return <div className=""></div>;
+import { redirect } from "next/navigation";
+
+export default function Main() {
+  redirect("/home");
+  return <div className="">Redirecting...</div>;
 }

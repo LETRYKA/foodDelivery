@@ -12,9 +12,22 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
+interface OrderItem {
+  food: {
+    image: string;
+  };
+}
+
+interface Order {
+  status: string;
+  createdAt: string | null;
+  totalPrice: number;
+  items: OrderItem[];
+}
+
 interface DetailDrawerProps {
   key: string;
-  order: any;
+  order: Order;
 }
 import InfoDrawer from "@/components/mobile/infoDrawer";
 

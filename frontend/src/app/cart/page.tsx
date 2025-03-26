@@ -8,12 +8,21 @@ import { CreditCard } from "lucide-react";
 import { CreateOrder } from "@/lib/api";
 import { toast } from "sonner";
 
+interface ItemData {
+  foodId: string;
+  items: any[];
+  quantity: number;
+}
+
 const Cart = () => {
-  const [cart, setCart] = useState([]);
-  const [items, setItems] = useState([
+  const [cart, setCart] = useState<
+    { food: { _id: string }; quantity: number }[]
+  >([]);
+  const [items, setItems] = useState<ItemData[]>([
     {
-      items: "",
-      quantity: "",
+      foodId: "",
+      items: [],
+      quantity: 0,
     },
   ]);
 
@@ -45,6 +54,7 @@ const Cart = () => {
   useEffect(() => {
     const formattedItems = cart.map((item) => ({
       foodId: item.food._id,
+      items: [],
       quantity: item.quantity,
     }));
     setItems(formattedItems);
@@ -63,7 +73,7 @@ const Cart = () => {
                   <InfoDrawer key={index} foodData={food} isCart={true} />
                 ))}
               </CartProvider>
-              {cart.length < 0 && (
+              {cart.length >= 0 && (
                 <Button className="w-full py-6 mt-8" onClick={handleCheckOut}>
                   <CreditCard />
                   Checkout

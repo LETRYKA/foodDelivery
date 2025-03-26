@@ -7,7 +7,7 @@ import axios from "axios";
 // Fetch Current User
 export async function fetchCurrentUser() {
   try {
-    const token = cookies().get("token")?.value;
+    const token = (await cookies()).get("token")?.value;
     if (!token) return null;
 
     const res = await axios.get("http://localhost:8080/api/users/me", {
@@ -46,7 +46,7 @@ export async function PatchUser({
   Address: string;
   userId: string;
 }) {
-  const token = cookies().get("token")?.value;
+  const token = (await cookies()).get("token")?.value;
   if (!token) return { error: "Unauthorized" };
 
   try {
@@ -72,7 +72,7 @@ export async function PatchUser({
 
 // Fetch Food
 export async function fetchFood() {
-  const token = cookies().get("token")?.value;
+  const token = (await cookies()).get("token")?.value;
   if (!token) return { error: "Unauthorized" };
 
   try {
@@ -88,7 +88,7 @@ export async function fetchFood() {
 
 // Fetch Food Categories
 export async function fetchCategory() {
-  const token = cookies().get("token")?.value;
+  const token = (await cookies()).get("token")?.value;
   if (!token) return { error: "Unauthorized" };
 
   try {
@@ -107,7 +107,7 @@ export async function fetchCategory() {
 
 // Fetch User Orders
 export async function fetchOrder() {
-  const token = cookies().get("token")?.value;
+  const token = (await cookies()).get("token")?.value;
   if (!token) return { error: "Unauthorized" };
 
   try {
@@ -129,7 +129,7 @@ export async function fetchOrder() {
 
 // Create Order
 export async function CreateOrder({ items }: { items: any[] }) {
-  const token = cookies().get("token")?.value;
+  const token = (await cookies()).get("token")?.value;
   if (!token) return { error: "Unauthorized" };
 
   try {
