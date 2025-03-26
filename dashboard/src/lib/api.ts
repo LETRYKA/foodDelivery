@@ -41,10 +41,11 @@ export async function updateStatus({
 
   try {
     const res = await axios.patch(
-      `${API_URL}api/food/food-order/${orderId}`,
+      `${API_URL}/api/food/food-order/${orderId}`,
       { status: newStatus },
       { headers: { Authorization: `Bearer ${token}` } }
     );
+    console.log(`dsadsadsads`, orderId);
     return res.data;
   } catch (err) {
     console.error("Error updating order status:", err);
@@ -60,12 +61,9 @@ export async function deleteOrder({ orderId }: { orderId: string }) {
   }
 
   try {
-    const res = await axios.delete(
-      `${API_URL}api/food/food-order/${orderId}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const res = await axios.delete(`${API_URL}api/food/food-order/${orderId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return res.data;
   } catch (err) {
     console.error("Error deleting order:", err);
@@ -101,12 +99,9 @@ export async function fetchFoodById({ foodId }: { foodId: string }) {
   }
 
   try {
-    const res = await axios.get(
-      `${API_URL}/api/food/food/${foodId}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const res = await axios.get(`${API_URL}/api/food/food/${foodId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return res.data;
   } catch (err) {
     console.error("Error getting food:", err);
@@ -203,12 +198,9 @@ export async function deleteFoodById({ foodId }: { foodId: string }) {
   }
 
   try {
-    const res = await axios.delete(
-      `${API_URL}/api/food/food/${foodId}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const res = await axios.delete(`${API_URL}/api/food/food/${foodId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return res.data;
   } catch (err) {
     console.error("Error deleting food", err);
@@ -226,12 +218,9 @@ export async function fetchCategory() {
   }
 
   try {
-    const res = await axios.get(
-      `${API_URL}/api/food/food-category`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const res = await axios.get(`${API_URL}/api/food/food-category`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return res.data;
   } catch (err) {
     console.error("Error fetching categories:", err);
@@ -247,12 +236,9 @@ export async function createCategory({ name }: { name: string }) {
   }
 
   try {
-    const res = await axios.post(
-      `${API_URL}/api/food/food-category}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const res = await axios.post(`${API_URL}/api/food/food-category}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return res.data;
   } catch (err) {
     console.error("Error deleting order:", err);
@@ -292,12 +278,9 @@ export async function deleteCategory({ id }: { id: string }) {
   }
 
   try {
-    const res = await axios.delete(
-      `${API_URL}/api/food/food-category${id}}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const res = await axios.delete(`${API_URL}/api/food/food-category${id}}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     return res.data;
   } catch (err) {
     console.error("Error deleting category:", err);
