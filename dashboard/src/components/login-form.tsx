@@ -28,7 +28,7 @@ export function LoginForm({
     e.preventDefault();
     setIsLoading(true);
     try {
-      const res = await axios.post(`http://api-doofplatform.vercel.app/api/auth/sign-in`, data, {
+      const res = await axios.post(`${API_URL}/api/auth/sign-in`, data, {
         withCredentials: true,
       });
       setIsLoading(false);

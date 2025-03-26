@@ -33,7 +33,15 @@ import { useEffect, useState } from "react";
 
 const InfoDrawer = (props: any) => {
   const { foodData, isCart, key } = props;
-  const [food, setFood] = useState();
+  interface Food {
+    _id: string;
+    foodName: string;
+    description: string;
+    price: number;
+    image: string;
+  }
+
+  const [food, setFood] = useState<Food | undefined>();
   const [quantity, setQuantity] = useState(isCart ? foodData?.quantity : 1);
   const { cart, addToCart, removeFromCart, updateQuantity } = useCart();
 
@@ -42,11 +50,15 @@ const InfoDrawer = (props: any) => {
   };
 
   const handleDelete = () => {
-    removeFromCart(food?._id);
+    if (food?._id) {
+      removeFromCart(food._id);
+    }
   };
 
   const handleUpdate = () => {
-    updateQuantity(food?._id, quantity);
+    if (food?._id) {
+      updateQuantity(food._id, quantity);
+    }
   };
 
   function onClick(adjustment: number) {
@@ -57,7 +69,7 @@ const InfoDrawer = (props: any) => {
     style: "decimal",
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(quantity * food?.price);
+  }).format(quantity * (food?.price ?? 0));
 
   useEffect(() => {
     if (isCart) {
@@ -70,7 +82,10 @@ const InfoDrawer = (props: any) => {
     <div className="dark z-40 w-full">
       <Drawer>
         <DrawerTrigger asChild>
-          <div key={key} className="w-full h-32 bg-[var(--foreground)]/5 rounded-[var(--radius)] flex flex-row justify-start items-center overflow-hidden gap-4 pr-3 border border-[var(--border)]/10 cursor-pointer">
+          <div
+            key={key}
+            className="w-full h-32 bg-[var(--foreground)]/5 rounded-[var(--radius)] flex flex-row justify-start items-center overflow-hidden gap-4 pr-3 border border-[var(--border)]/10 cursor-pointer"
+          >
             <div
               className="h-full w-auto bg-slate-200 aspect-square bg-cover bg-center rounded-[var(--radius)]"
               style={{
@@ -86,7 +101,7 @@ const InfoDrawer = (props: any) => {
                 <div className="bg-[#4FAF5A] h-full w-20 p-1 rounded-full flex justify-center items-center mt-2">
                   <p className="text-xs text-white">
                     {isCart
-                      ? `${foodData.quantity * food?.price}₮`
+                      ? `${foodData.quantity * (food?.price ?? 0)}₮`
                       : `from ${food?.price}₮`}
                   </p>
                 </div>
