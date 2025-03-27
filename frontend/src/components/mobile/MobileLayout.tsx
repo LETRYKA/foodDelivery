@@ -19,9 +19,6 @@ export default function MobileLayout({
     <div className={manRope.variable}>
       <Toaster position="bottom-right" richColors />
       {children}
-      <div className="fixed bottom-7 w-full flex justify-center items-center z-50">
-        <NavBar />
-      </div>
     </div>
   );
 }

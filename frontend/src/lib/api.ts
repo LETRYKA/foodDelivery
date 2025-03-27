@@ -6,6 +6,7 @@ import axios from "axios";
 
 // GET API URL
 const API_URL = process.env.API_URL;
+console.log(API_URL, "HEEEERE");
 
 // Fetch Current User
 export async function fetchCurrentUser() {
