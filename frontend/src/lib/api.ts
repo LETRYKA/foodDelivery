@@ -6,7 +6,6 @@ import axios from "axios";
 
 // GET API URL
 const API_URL = process.env.API_URL;
-console.log(API_URL, "HEEEERE");
 
 // Fetch Current User
 export async function fetchCurrentUser() {
@@ -81,6 +80,23 @@ export async function fetchFood() {
 
   try {
     const res = await axios.get(`${API_URL}/api/food/food`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching food:", err);
+    return { error: "Failed to fetch food" };
+  }
+}
+
+// Fetch food by id
+export async function fetchFoodById({ foodId }: { foodId: string }) {
+  const token = (await cookies()).get("token")?.value;
+  if (!token) return { error: "Unauthorized" };
+
+  try {
+    const user = await fetchCurrentUser();
+    const res = await axios.get(`${API_URL}/api/food/food/${foodId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;

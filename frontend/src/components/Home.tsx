@@ -1,4 +1,5 @@
 import {
+  ArrowUpRight,
   AtSign,
   Bell,
   ChevronDown,
@@ -14,99 +15,102 @@ import { Button } from "./ui/button";
 import Marquee from "react-fast-marquee";
 import Link from "next/link";
 import Header from "./Header";
+import FoodList from "./FoodList";
+import { CartProvider } from "@/lib/CartContext";
+import CategorySkeleton from "./Skeleton/CategorySkeleton";
+import Autoplay from "embla-carousel-autoplay";
 
 const HomeWeb = (props: any) => {
-  const { foodData, category } = props;
+  const { foodData, category, isLoading } = props;
   return (
     <>
       <div className="w-full h-[2000px] bg-white/90">
         <Header />
         <div className="w-full px-10 md:px-36 mt-5 flex flex-row justify-center gap-4">
-          <Carousel className="w-full lg:w-7/10 xl:9/10">
+          <Carousel
+            plugins={[
+              Autoplay({
+                delay: 3000,
+              }),
+            ]}
+            className="w-full lg:w-7/10 xl:9/10"
+          >
             <CarouselContent>
               {Array.from({ length: 5 }).map((_, index) => (
                 <CarouselItem key={index}>
                   <div className="p-1">
-                    <Card>
-                      <CardContent className="flex aspect-10/4 items-center justify-center p-6">
-                        <span className="text-4xl font-semibold">
-                          {index + 1}
-                        </span>
-                      </CardContent>
+                    <Card
+                      className=" aspect-10/6 bg-center bg-cover"
+                      style={{
+                        backgroundImage: `url(https://mir-s3-cdn-cf.behance.net/project_modules/fs/7066a0222182411.67e1a1786481e.png)`,
+                      }}
+                    >
+                      <CardContent className="flex h-full items-center justify-center p-6 bg-cover bg-center"></CardContent>
                     </Card>
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
           </Carousel>
-          <div className="w-3/10 aspect-10/4 flex-col gap-4 hidden lg:flex">
-            <div className="w-full h-2/4 bg-slate-300 rounded-[var(--radius)]"></div>
-            <div className="w-full h-2/4 bg-slate-300 rounded-[var(--radius)]"></div>
+          <div className="w-3/10 aspect-10/4 flex-col gap-4 hidden lg:flex py-1">
+            <div className="w-full h-2/4 bg-slate-300 rounded-[var(--radius)] overflow-hidden box-border relative group">
+              <ArrowUpRight className="z-10 absolute right-5 top-4 w-7  h-auto aspect-square stroke-white opacity-0 group-hover:opacity-100 transion-all duration-200" />
+              <p className="z-10 absolute -bottom-24 tracking-wider group-hover:bottom-3 left-6 font-black sm:text-xl  md:text-xl  lg:text-3xl xl:text-5xl text-[var(--background)] font-[Monument_Extended] transition-all duration-200 ease-in-out">
+                SAUCE
+              </p>
+              <img
+                src="https://i.pinimg.com/736x/57/96/83/5796834a12b73df8a8aeaa75f3c80c5a.jpg"
+                className="absolute w-full h-full object-cover transition-transform duration-200 group-hover:scale-105 z-0 cursor-pointer"
+              />
+            </div>
+            <div className="w-full h-2/4 bg-slate-300 rounded-[var(--radius)] overflow-hidden box-border relative group">
+              <ArrowUpRight className="z-10 absolute right-5 top-4 w-7  h-auto aspect-square stroke-white opacity-0 group-hover:opacity-100 transion-all duration-200" />
+              <p className="z-10 absolute tracking-wider -bottom-24 group-hover:bottom-3 left-6 font-black sm:text-xl  md:text-xl  lg:text-3xl xl:text-5xl text-[var(--background)] font-[Monument_Extended] transition-all duration-200 ease-in-out">
+                SPECIAL BURGER
+              </p>
+              <img
+                src="https://i.pinimg.com/736x/27/b9/f4/27b9f4db2bd5906112d60c752197311a.jpg"
+                className="absolute w-full h-full object-cover transition-transform duration-200 group-hover:scale-105 z-0 cursor-pointer"
+              />
+            </div>
           </div>
         </div>
-        <div className="w-full h-24 bg-[#FFB91D] mt-15 flex flex-row justify-center items-center gap-20">
-          <Marquee gradient={true} gradientColor={`#FFB91D`}>
+        <div className="w-full h-24 bg-[var(--primary)] mt-15 flex flex-row justify-center items-center gap-20">
+          <Marquee gradient={true} gradientColor={`var(--primary)`}>
             {Array(5)
               .fill()
               .map((item, index) => (
-                <p className="text-[#715202] font-black text-5xl font-[Monument_Extended] flex justify-center items-center gap-5">
-                  <AtSign className="w-10 h-auto aspect-square text-[#715202]/40 ml-5" />
-                  COFFEE LATTE
+                <p className="text-[var(--background)] font-black text-5xl font-[Monument_Extended] flex justify-center items-center gap-5 tracking-widest ml-5">
+                  {/* <AtSign className="w-10 h-auto aspect-square text-[var(--background)]/30 ml-5" /> */}
+                  OPENING SOON
                 </p>
               ))}
           </Marquee>
         </div>
-        <Carousel className="w-full px-10 md:px-36 mt-15">
-          <CarouselContent>
-            {category.map((category: any, index: any) => (
-              <CarouselItem key={index} className="basis-1/15">
-                <div className="flex flex-col justify-center items-center gap-2">
-                  <div className="w-14 h-14 bg-[var(--foreground)]/10 rounded-full flex justify-center items-center cursor-pointer">
-                    <img
-                      src="https://cdn3d.iconscout.com/3d/premium/thumb/meat-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--delicious-logo-beef-chicken-food-pack-drink-illustrations-4497597.png?f=webp"
-                      width={35}
-                    />
+        {isLoading ? (
+          <CategorySkeleton />
+        ) : (
+          <Carousel className="w-full px-10 md:px-36 mt-15">
+            <CarouselContent>
+              {category.map((category: any, index: any) => (
+                <CarouselItem key={index} className="basis-1/15">
+                  <div className="flex flex-col justify-center items-center gap-2">
+                    <div className="w-14 h-14 bg-[var(--foreground)]/10 rounded-full flex justify-center items-center cursor-pointer">
+                      <img
+                        src="https://cdn3d.iconscout.com/3d/premium/thumb/meat-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--delicious-logo-beef-chicken-food-pack-drink-illustrations-4497597.png?f=webp"
+                        width={35}
+                      />
+                    </div>
+                    <p className="text-xs">{category.name}</p>
                   </div>
-                  <p className="text-xs">{category.name}</p>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
-        <div className="w-full px-10 md:px-36 mt-15">
-          <p className="text-3xl font-black">Our Menu</p>
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3  xl:grid-cols-4 2xl:grid-cols-5 grid-rows-auto mt-8 gap-6">
-            {/* CARD */}
-            {foodData.map((food: any, index: any) => (
-              <Link href={`product/${food._id}`}>
-                <div
-                  key={index}
-                  className="w-full h-auto aspect-[6/7] border border-[var(--border)] rounded-2xl flex flex-col relative overflow-hidden box-border group bg-slate-700 group shadow-lg"
-                >
-                  <img
-                    className="z-0 absolute w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105 [mask-image:linear-gradient(to_bottom,#000_20%,transparent_100%)] cursor-pointer"
-                    src={food?.image}
-                  />
-                  <div className="absolute opacity-0 group-hover:opacity-100 flex right-3 top-4 w-12 h-auto aspect-square bg-[var(--background)] rounded-sm justify-center items-center cursor-pointer transition-all duration-200">
-                    <ShoppingBasket width={20} />
-                  </div>
-                  <div className="absolute flex left-3 top-4 px-4 py-2 bg-white/20 backdrop-blur-xs rounded-sm justify-center items-center text-[var(--background)] font-bold text-sm">
-                    {food?.price}₮
-                  </div>
-                  <div className="z-10 absolute bottom-5 w-full flex flex-col justify-start items-start px-5">
-                    <p className="text-xl text-[var(--background)] font-semibold">
-                      {food?.foodName}
-                    </p>
-                    <p className="text-sm text-[var(--background)]/60 h-10 group-hover:h-14 overflow-hidden mt-2 transition-all duration-200">
-                      {food?.description}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            ))}
-            {/* END */}
-          </div>
-        </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        )}
+        <CartProvider>
+          <FoodList />
+        </CartProvider>
       </div>
     </>
   );

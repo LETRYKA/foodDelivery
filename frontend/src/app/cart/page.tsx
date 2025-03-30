@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { CreditCard } from "lucide-react";
 import { CreateOrder } from "@/lib/api";
 import { toast } from "sonner";
+import CartMobile from "@/components/mobile/Cart";
+import CartWeb from "@/components/Cart";
 
 interface ItemData {
   foodId: string;
@@ -25,6 +27,7 @@ const Cart = () => {
       quantity: 0,
     },
   ]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 550);
 
   const getCartFromLocalStorage = () => {
     const cartFromLocalStorage = JSON.parse(
@@ -60,29 +63,25 @@ const Cart = () => {
     setItems(formattedItems);
   }, [cart]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 550);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <>
-      <div className="w-full h-screen bg-white">
-        <div className="w-full h-full flex flex-col px-5">
-          <div className="w-full flex flex-row justify-center items-center gap-2 mt-5"></div>
-          <p className="text-2xl font-semibold mt-10">Cart</p>
-          <div className="w-full flex flex-col">
-            <div className="w-full flex flex-col justify-center items-center mt-7 gap-4">
-              <CartProvider>
-                {cart.map((food, index) => (
-                  <InfoDrawer key={index} foodData={food} isCart={true} />
-                ))}
-              </CartProvider>
-              {cart.length >= 0 && (
-                <Button className="w-full py-6 mt-8" onClick={handleCheckOut}>
-                  <CreditCard />
-                  Checkout
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      {isMobile ? (
+        <CartMobile cart={cart} handleCheckOut={handleCheckOut} />
+      ) : (
+        <CartProvider>
+          <CartWeb cart={cart} handleCheckOut={handleCheckOut} />
+        </CartProvider>
+      )}
+      ;
     </>
   );
 };

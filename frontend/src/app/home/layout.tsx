@@ -9,9 +9,9 @@ export default function HomeLayout({
   return (
     <MobileLayout>
       {children}
-      <div className="fixed bottom-7 w-full flex justify-center items-center z-50">
+      {/* <div className="fixed bottom-7 w-full flex justify-center items-center z-50">
         <NavBar />
-      </div>
+      </div> */}
     </MobileLayout>
   );
 }

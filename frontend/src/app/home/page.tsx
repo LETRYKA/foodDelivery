@@ -24,14 +24,17 @@ interface CategoryType {
 export default function Home() {
   const [foodData, setFoodData] = useState([]);
   const [category, setCategory] = useState<CategoryType[]>([]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 550);
+  const [isLoading, setisLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    setisLoading(true);
     fetchFood().then((data) => {
       setFoodData(data.data);
     });
     fetchCategory().then((data) => {
       setCategory(data.data);
+      setisLoading(false);
     });
   }, []);
 
@@ -39,6 +42,8 @@ export default function Home() {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 550);
     };
+
+    handleResize();
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -49,7 +54,11 @@ export default function Home() {
       {isMobile ? (
         <HomeMobile foodData={foodData} category={category} />
       ) : (
-        <HomeWeb foodData={foodData} category={category} />
+        <HomeWeb
+          foodData={foodData}
+          category={category}
+          isLoading={isLoading}
+        />
       )}
       ;
     </>
