@@ -28,14 +28,32 @@ export const createFood = async (req, res, next) => {
 };
 
 export const getFoods = async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+
+  const skip = (page - 1) * limit;
+
   try {
-    const foods = await Food.find().populate({
+    const totalCount = await Food.countDocuments();
+
+    const foods = await Food.find().skip(skip).limit(limit).populate({
       path: "Category",
       select: "name",
       strictPopulate: false,
     });
 
-    res.status(200).json({ success: true, data: foods });
+    const totalPages = Math.ceil(totalCount / limit);
+
+    res.status(200).json({
+      success: true,
+      data: foods,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalCount: totalCount,
+        limit: limit,
+      },
+    });
   } catch (err) {
     next(err);
   }
@@ -65,9 +83,9 @@ export const updateFood = async (req, res, next) => {
 
     const updatedFood = await Food.findByIdAndUpdate(
       foodId,
-      { 
-        $set: { foodName, description, price, image }, 
-        $addToSet: { categories: categoryId }
+      {
+        $set: { foodName, description, price, image },
+        $addToSet: { categories: categoryId },
       },
       { new: true, runValidators: true }
     ).populate("categories");
@@ -87,7 +105,6 @@ export const updateFood = async (req, res, next) => {
     next(err);
   }
 };
-
 
 export const deleteFood = async (req, res, next) => {
   try {

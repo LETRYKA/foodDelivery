@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import Cookies from "js-cookie";
 
 const API_URL = process.env.API_URL;
+console.log(API_URL)
 
 export function LoginForm({
   className,
@@ -28,11 +29,14 @@ export function LoginForm({
     e.preventDefault();
     setIsLoading(true);
     try {
-      const res = await axios.post(`https://api-doofplatform.vercel.app/api/auth/sign-in`, data, {
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        `${API_URL}/api/auth/sign-in`,
+        data,
+        {
+          withCredentials: true,
+        }
+      );
       setIsLoading(false);
-      console.log(res.data.data.token);
 
       const token = res.data.data.token;
 

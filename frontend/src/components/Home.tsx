@@ -78,7 +78,7 @@ const HomeWeb = (props: any) => {
         <div className="w-full h-24 bg-[var(--primary)] mt-15 flex flex-row justify-center items-center gap-20">
           <Marquee gradient={true} gradientColor={`var(--primary)`}>
             {Array(5)
-              .fill()
+              .fill(5)
               .map((item, index) => (
                 <p className="text-[var(--background)] font-black text-5xl font-[Monument_Extended] flex justify-center items-center gap-5 tracking-widest ml-5">
                   {/* <AtSign className="w-10 h-auto aspect-square text-[var(--background)]/30 ml-5" /> */}
@@ -93,7 +93,10 @@ const HomeWeb = (props: any) => {
           <Carousel className="w-full px-10 md:px-36 mt-15">
             <CarouselContent>
               {category.map((category: any, index: any) => (
-                <CarouselItem key={index} className="basis-1/15">
+                <CarouselItem
+                  key={index}
+                  className="basis-1/5 sm:basis-1/7 md:basis-1/9 xl:basis-1/20"
+                >
                   <div className="flex flex-col justify-center items-center gap-2">
                     <div className="w-14 h-14 bg-[var(--foreground)]/10 rounded-full flex justify-center items-center cursor-pointer">
                       <img
