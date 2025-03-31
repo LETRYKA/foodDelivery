@@ -8,30 +8,17 @@ import cors from "cors";
 import "dotenv/config";
 
 const app = express();
-
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
-
-app.options("*", (req, res) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.sendStatus(200);
-});
-
-
-await connectToDatabase();
+const port = process.env.PORT;
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 mongoose.connect(process.env.MONGODB_STRING);
+
+app.use(express.json());
 
 app.use("/api/users", usersRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/food", foodRouter);
 
-export default app;
+app.listen(port, async () => {
+  console.log(`🟢 Server is running on port ${port}`);
+  await connectToDatabase();
+});
