@@ -74,14 +74,17 @@ export async function PatchUser({
 }
 
 // Fetch Food
-export async function fetchFood() {
+export async function fetchFood(page: number, limit: number) {
   const token = (await cookies()).get("token")?.value;
   if (!token) return { error: "Unauthorized" };
 
   try {
-    const res = await axios.get(`${API_URL}/api/food/food`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await axios.get(
+      `${API_URL}/api/food/food?page=${page}&limit=${limit}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return res.data;
   } catch (err) {
     console.error("Error fetching food:", err);

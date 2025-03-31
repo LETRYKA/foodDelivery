@@ -50,12 +50,11 @@ const Product = () => {
 
   return (
     <CartProvider>
-      <div className="w-full h-full bg-white/90">
-        <Header />
+      <div className="w-full h-full bg-white py-20">
         {isLoading ? (
           <ProductSkeleton />
         ) : (
-          <div className="w-full px-60 mt-10 flex flex-row justify-center gap-16">
+          <div className="w-full px-60 flex flex-row justify-center gap-16">
             <div className="w-auto h-[600px] aspect-square bg-slate-100 rounded-4xl overflow-hidden border-box group border shadow-lg relative">
               <div className="absolute z-10 flex left-5 top-7 px-4 py-2 bg-white/20 backdrop-blur-xs rounded-sm justify-center items-center text-[var(--background)] font-bold text-sm">
                 {foodData?.price}₮

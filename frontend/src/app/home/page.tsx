@@ -24,17 +24,17 @@ interface CategoryType {
 export default function Home() {
   const [foodData, setFoodData] = useState([]);
   const [category, setCategory] = useState<CategoryType[]>([]);
-  const [isLoading, setisLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    setisLoading(true);
+    setIsLoading(true);
     fetchFood().then((data) => {
       setFoodData(data.data);
     });
     fetchCategory().then((data) => {
       setCategory(data.data);
-      setisLoading(false);
+      setIsLoading(false);
     });
   }, []);
 

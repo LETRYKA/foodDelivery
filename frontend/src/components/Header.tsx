@@ -63,7 +63,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="w-full px-10 md:px-36 py-8 flex flex-row justify-between z-50">
+    <header className="w-full px-10 md:px-36 py-8 flex flex-row justify-between z-50 bg-white fixed top-0">
       <div className="flex justify-center items-center z-50">
         <Link href={`/home`}>
           <p className="text-2xl font-medium">
@@ -72,7 +72,7 @@ const Header = () => {
           {/* <img src="/logo.png" className="w-20 h-auto aspect-square" /> */}
         </Link>
       </div>
-      <p className="hidden md:flex text-sm font-medium bg-white text-[var(--foreground)] h-10 px-5 rounded-full cursor-pointer justify-center items-center gap-2">
+      <p className="hidden md:flex text-sm font-medium bg-[var(--foreground)]/5 text-[var(--foreground)] h-10 px-5 rounded-full cursor-pointer justify-center items-center gap-2">
         <MapPin width={16} className="stroke-[var(--primary)]" />
         {user?.address || "-"}
       </p>

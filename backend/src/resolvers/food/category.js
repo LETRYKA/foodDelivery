@@ -12,7 +12,7 @@ export const getCategories = async (req, res, next) => {
 // Create new category
 export const createCategory = async (req, res, next) => {
 	try {
-		const { name } = req.body;
+		const { name, emoji, image } = req.body;
 
 		if (!name) {
 			return res.status(400).json({ success: false, message: "Category name is required" });
@@ -23,7 +23,7 @@ export const createCategory = async (req, res, next) => {
 			return res.status(400).json({ success: false, message: "Category already exists" });
 		}
 
-		const newCategory = new Category({ name });
+		const newCategory = new Category({ name, emoji, name });
 		await newCategory.save();
 
 		res.status(201).json({ success: true, message: "Category created", data: newCategory });
@@ -36,11 +36,11 @@ export const createCategory = async (req, res, next) => {
 export const updateCategory = async (req, res, next) => {
 	try {
 		const { categoryId } = req.params;
-		const { name } = req.body;
+		const { name, emoji, image } = req.body;
 
 		const updatedCategory = await Category.findByIdAndUpdate(
 			categoryId,
-			{ name },
+			{ name, emoji, image },
 			{ new: true, runValidators: true }
 		);
 

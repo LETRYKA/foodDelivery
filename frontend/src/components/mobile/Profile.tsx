@@ -22,9 +22,19 @@ import {
 import { Button } from "../ui/button";
 import { InfoCard } from "@/app/profile/_components/InfoCard";
 import Link from "next/link";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const ProfileMobile = (props: any) => {
   const { user } = props;
+  const router = useRouter();
+
+  const handleLogOut = () => {
+    console.log(`LOGOUT`);
+    Cookies.remove("token", { path: "/" });
+    router.push("/auth/sign-in");
+  };
+
   return (
     <div className="w-full flex flex-col justify-center items-center pb-30">
       <div
@@ -119,7 +129,10 @@ const ProfileMobile = (props: any) => {
             </div>
           </CardContent>
         </Card>
-        <Card className="w-full bg-[#141414] gap-6 py-4 -mt-2 cursor-pointer">
+        <Card
+          className="w-full bg-[#141414] gap-6 py-4 -mt-2 cursor-pointer"
+          onClick={handleLogOut}
+        >
           <CardContent className="flex flex-row justify-between">
             <div className="flex justify-center items-center gap-3">
               <LogOut width={18} stroke="var(--destructive)" />

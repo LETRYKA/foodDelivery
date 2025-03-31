@@ -24,8 +24,7 @@ const HomeWeb = (props: any) => {
   const { foodData, category, isLoading } = props;
   return (
     <>
-      <div className="w-full h-full bg-white/90 pb-40">
-        <Header />
+      <div className="w-full h-full bg-white pb-40">
         <div className="w-full px-10 md:px-36 mt-5 flex flex-row justify-center gap-4">
           <Carousel
             plugins={[
@@ -75,18 +74,20 @@ const HomeWeb = (props: any) => {
             </div>
           </div>
         </div>
-        <div className="w-full h-24 bg-[var(--primary)] mt-15 flex flex-row justify-center items-center gap-20">
-          <Marquee gradient={true} gradientColor={`var(--primary)`}>
-            {Array(5)
-              .fill(5)
-              .map((item, index) => (
-                <p className="text-[var(--background)] font-black text-5xl font-[Monument_Extended] flex justify-center items-center gap-5 tracking-widest ml-5">
-                  {/* <AtSign className="w-10 h-auto aspect-square text-[var(--background)]/30 ml-5" /> */}
-                  OPENING SOON
-                </p>
-              ))}
-          </Marquee>
-        </div>
+        <Marquee
+          gradient={true}
+          gradientColor={`var(--primary)`}
+          className="w-full h-24 bg-[var(--primary)] mt-15 flex flex-row justify-center items-center gap-20"
+        >
+          {Array(5)
+            .fill(5)
+            .map((item, index) => (
+              <p className="text-[var(--background)] font-black text-5xl font-[Monument_Extended] flex justify-center items-center gap-5 tracking-widest ml-5">
+                {/* <AtSign className="w-10 h-auto aspect-square text-[var(--background)]/30 ml-5" /> */}
+                OPENING SOON
+              </p>
+            ))}
+        </Marquee>
         {isLoading ? (
           <CategorySkeleton />
         ) : (
@@ -99,10 +100,11 @@ const HomeWeb = (props: any) => {
                 >
                   <div className="flex flex-col justify-center items-center gap-2">
                     <div className="w-14 h-14 bg-[var(--foreground)]/10 rounded-full flex justify-center items-center cursor-pointer">
-                      <img
+                      {/* <img
                         src="https://cdn3d.iconscout.com/3d/premium/thumb/meat-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--delicious-logo-beef-chicken-food-pack-drink-illustrations-4497597.png?f=webp"
                         width={35}
-                      />
+                      /> */}
+                      <p className="text-2xl">{category.emoji}</p>
                     </div>
                     <p className="text-xs">{category.name}</p>
                   </div>

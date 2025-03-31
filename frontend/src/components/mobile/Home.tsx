@@ -27,10 +27,11 @@ const HomeMobile = (props: any) => {
                 <CarouselItem key={index} className="basis-1/5">
                   <div className="flex flex-col justify-center items-center gap-2">
                     <div className="w-14 h-14 bg-[#262626] rounded-full flex justify-center items-center cursor-pointer">
-                      <img
+                      {/* <img
                         src="https://cdn3d.iconscout.com/3d/premium/thumb/meat-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--delicious-logo-beef-chicken-food-pack-drink-illustrations-4497597.png?f=webp"
                         width={35}
-                      />
+                      /> */}
+                      <p className="text-xl">{category.emoji}</p>
                     </div>
                     <p className="text-xs">{category.name}</p>
                   </div>

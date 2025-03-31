@@ -1,20 +1,17 @@
-"use client";
-
+import Header from "@/components/Header";
 import MobileLayout from "@/components/mobile/MobileLayout";
-import NavBar from "@/components/mobile/NavBar";
-import { CartProvider } from "@/lib/CartContext";
 
-export default function OrderLayout({
+export default function HomeLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <MobileLayout>
-      {<CartProvider>{children}</CartProvider>}
-      <div className="fixed bottom-7 w-full flex justify-center items-center z-50">
-        <NavBar />
+      <div className="h-20">
+        <Header />
       </div>
+      {children}
     </MobileLayout>
   );
 }

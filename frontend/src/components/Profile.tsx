@@ -7,8 +7,7 @@ const ProfileWeb = (props: any) => {
   const { user } = props;
   return (
     <>
-      <div className="w-full h-full bg-white/90 relatvie">
-        <Header />
+      <div className="w-full h-full bg-white relative py-20">
         <div className="w-full px-10 lg:px-20 xl:px-60">
           <div className=" top-0 w-full h-64 rounded-2xl overflow-hidden border-box relative group">
             <div className="absolute px-5 py-2 bottom-4 right-4 flex-row text-[var(--background)] text-sm gap-2 rounded-lg bg-black/40 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer">
@@ -55,7 +54,7 @@ const ProfileWeb = (props: any) => {
             </div>
           </div>
           <p className="mt-10 text-xl font-bold">Recent Orders</p>
-          <div className="w-full h-96 bg-white mt-5 rounded-3xl"></div>
+          <div className="w-full h-96 bg-[var(--foreground)]/5 mt-5 rounded-3xl"></div>
         </div>
       </div>
     </>

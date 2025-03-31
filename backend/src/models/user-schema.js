@@ -43,6 +43,14 @@ const userSchema = new mongoose.Schema(
         "Invalid image URL",
       ],
     },
+    cover: {
+      type: String,
+      required: false,
+      match: [
+        /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))$/s,
+        "Invalid image URL",
+      ],
+    },
     isVerified: {
       type: Boolean,
       default: false,

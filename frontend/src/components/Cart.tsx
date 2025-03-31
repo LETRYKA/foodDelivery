@@ -32,8 +32,7 @@ const CartWeb = (props: any) => {
 
   return (
     <div className="w-full h-screen bg-[var(--background)]">
-      <Header />
-      <div className="w-full px-36 flex flex-row justify-center gap-10 mt-10">
+      <div className="w-full h-full px-36 py-20 flex flex-row justify-center gap-10">
         <div className="w-7/10 h-60">
           <p className="text-3xl font-black mb-16">Shopping Cart.</p>
           <div className="w-full flex flex-row justify-between">

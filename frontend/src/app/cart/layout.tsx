@@ -1,9 +1,36 @@
-import MobileLayout from "@/components/mobile/MobileLayout";
+"use client";
 
-export default function CartLayout({
+import Header from "@/components/Header";
+import MobileLayout from "@/components/mobile/MobileLayout";
+import NavBar from "@/components/mobile/NavBar";
+import { useEffect, useState } from "react";
+
+export default function HomeLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <MobileLayout>{children}</MobileLayout>;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 550);
+    };
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  return (
+    <MobileLayout>
+      <div className="h-20">{!isMobile && <Header />}</div>
+      {children}
+      {isMobile && (
+        <div className="fixed bottom-7 w-full flex justify-center items-center z-50">
+          <NavBar />
+        </div>
+      )}
+    </MobileLayout>
+  );
 }
