@@ -24,7 +24,7 @@ const HomeWeb = (props: any) => {
   const { foodData, category, isLoading } = props;
   return (
     <>
-      <div className="w-full h-[2000px] bg-white/90">
+      <div className="w-full h-full bg-white/90 pb-40">
         <Header />
         <div className="w-full px-10 md:px-36 mt-5 flex flex-row justify-center gap-4">
           <Carousel
