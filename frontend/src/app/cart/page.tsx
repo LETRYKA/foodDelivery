@@ -39,13 +39,15 @@ const Cart = () => {
 
   const handleCheckOut = async () => {
     try {
-      await CreateOrder({
-        items: items,
-      });
-      localStorage.clear();
-      toast.success("Order placed successfully!");
+      const response = await CreateOrder({ items });
+      if (response?.success) {
+        localStorage.clear();
+        toast.success("Order placed successfully!");
+      } else {
+        toast.error("Failed to place order");
+      }
     } catch (err) {
-      console.error("Error while placing order", err);
+      console.error("Error", err);
       toast.error("Failed to place order");
     }
   };

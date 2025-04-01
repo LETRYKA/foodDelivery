@@ -73,11 +73,6 @@ const EditDrawer = (props: any) => {
     if (inputData.Password) updatedData.Password = inputData.Password;
     if (inputData.Address) updatedData.Address = inputData.Address;
 
-    if (Object.keys(updatedData).length === 0) {
-      toast.error("No fields to update.");
-      return;
-    }
-
     try {
       await PatchUser({
         ...updatedData,
@@ -85,26 +80,26 @@ const EditDrawer = (props: any) => {
       });
       toast.success(`Updated successfully!`);
     } catch (err) {
-      console.error("Error occurred while updating user", err);
+      console.error("Error updating user", err);
       toast.error("Error updating user.");
     }
   };
 
   const handlePasswordSubmit = async () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      toast.error("New password and confirm password do not match.");
+      toast.error("Password not matching.");
       return;
     }
 
     try {
       await PatchUser({
-        userId: user?._id,
-        currentPassword: passwordData.currentPassword,
-        newPassword: passwordData.newPassword,
+        // userId: user?._id,
+        // currentPassword: passwordData.currentPassword,
+        // newPassword: passwordData.newPassword,
       });
       toast.success("Password updated successfully!");
     } catch (err) {
-      console.error("Error occurred while updating password", err);
+      console.error("Error updating password", err);
       toast.error("Error updating password.");
     }
   };

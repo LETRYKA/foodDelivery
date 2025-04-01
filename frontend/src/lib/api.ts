@@ -75,20 +75,18 @@ export async function PatchUser({
 
 // Fetch Food
 export async function fetchFood(page: number, limit: number) {
-  const token = (await cookies()).get("token")?.value;
-  if (!token) return { error: "Unauthorized" };
-
   try {
     const res = await axios.get(
-      `${API_URL}/api/food/food?page=${page}&limit=${limit}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
+      `${API_URL}/api/food/food?page=${page}&limit=${limit}`
     );
-    return res.data;
+
+    return {
+      foodItems: res.data.data, // List of food items
+      pagination: res.data.pagination, // Extract pagination info
+    };
   } catch (err) {
     console.error("Error fetching food:", err);
-    return { error: "Failed to fetch food" };
+    return { foodItems: [], pagination: { currentPage: 1, totalPages: 1 } };
   }
 }
 

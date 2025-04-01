@@ -1,5 +1,8 @@
+"use client";
+
 import Header from "@/components/Header";
 import MobileLayout from "@/components/mobile/MobileLayout";
+import { CartProvider } from "@/lib/CartContext";
 
 export default function HomeLayout({
   children,
@@ -11,7 +14,7 @@ export default function HomeLayout({
       <div className="h-20">
         <Header />
       </div>
-      {children}
+      <CartProvider>{children}</CartProvider>
     </MobileLayout>
   );
 }

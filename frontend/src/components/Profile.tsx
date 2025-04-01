@@ -1,14 +1,16 @@
-import { ImageDown, Mail, MapPin } from "lucide-react";
+import { ArrowUpRight, ImageDown, Mail, MapPin } from "lucide-react";
 import Header from "./Header";
 import { Button } from "./ui/button";
 import EditSheet from "@/app/profile/_components/EditSheet";
+import { formatNumber, formatDate } from "@/utils/Formatter";
 
 const ProfileWeb = (props: any) => {
   const { user } = props;
+  console.log(user.data.orderedFoods);
   return (
     <>
       <div className="w-full h-full bg-white relative py-20">
-        <div className="w-full px-10 lg:px-20 xl:px-60">
+        <div className="w-full h-full px-10 lg:px-20 xl:px-60">
           <div className=" top-0 w-full h-64 rounded-2xl overflow-hidden border-box relative group">
             <div className="absolute px-5 py-2 bottom-4 right-4 flex-row text-[var(--background)] text-sm gap-2 rounded-lg bg-black/40 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer">
               <ImageDown width={17} stroke="white" /> Upload image
@@ -54,7 +56,77 @@ const ProfileWeb = (props: any) => {
             </div>
           </div>
           <p className="mt-10 text-xl font-bold">Recent Orders</p>
-          <div className="w-full h-96 bg-[var(--foreground)]/5 mt-5 rounded-3xl"></div>
+          <div className="w-full h-full mt-5 rounded-3xl grid grid-cols-4 grid-rows-auto gap-6">
+            {/* CARD */}
+            {user.data?.orderedFood?.length > 0 ? (
+              <p>No Orders ATM</p>
+            ) : (
+              user.data.orderedFoods
+                .slice()
+                .reverse()
+                .map((order, index) => (
+                  <div
+                    key={index}
+                    className="w-full h-auto bg-[var(--foreground)]/5 rounded-2xl flex flex-col p-6"
+                  >
+                    <div className="flex justify-between">
+                      <div></div>
+                      <div className="text-sm bg-amber-200 rounded-full py-1 px-4">
+                        {order?.status}
+                      </div>
+                    </div>
+                    <div className="flex gap-2 mt-4">
+                      <div className="w-2/4 bg-[var(--foreground)]/5 flex flex-col p-3 rounded-sm">
+                        <p className="text-xs text-[var(--foreground)]/40">
+                          Ordered time
+                        </p>
+                        <p className="text-base text-[var(--foreground)] font-semibold">
+                          {formatDate(order?.updatedAt)}
+                        </p>
+                      </div>
+                      <div className="w-2/4 bg-[var(--foreground)]/5 flex flex-col p-3 rounded-sm">
+                        <p className="text-xs text-[var(--foreground)]/40">
+                          Total Payment
+                        </p>
+                        <p className="text-base text-[var(--foreground)] font-semibold">
+                          {formatNumber(order?.totalPrice)}₮
+                        </p>
+                      </div>
+                    </div>
+                    {order.items.map((food: any, index: any) => (
+                      <div
+                        key={index}
+                        className="w-full h-12 flex flex-col mt-4"
+                      >
+                        <div className="w-full h-full flex justify-between items-center">
+                          <div className="h-full flex flex-row gap-2 items-center">
+                            <div
+                              className="w-auto h-full aspect-square bg-cover bg-center bg-slate-300 rounded-lg"
+                              style={{
+                                backgroundImage: `url(${food?.food?.image})`,
+                              }}
+                            ></div>
+                            <div className="flex flex-col">
+                              <p className="text-sm font-semibold">
+                                {food?.food?.foodName}
+                              </p>
+                              <p className="text-xs text-[var(--foreground)]/40">
+                                {formatNumber(food?.food?.price)}₮
+                              </p>
+                            </div>
+                          </div>
+                          <p className="font-semibold">{food?.quantity}x</p>
+                        </div>
+                      </div>
+                    ))}
+                    <Button className="w-full mt-10 py-6 bg-[var(--foreground)] hover:bg-[var(--foreground)]/80">
+                      Odoogoor ajilahgui <ArrowUpRight />
+                    </Button>
+                  </div>
+                ))
+            )}
+            {/* END */}
+          </div>
         </div>
       </div>
     </>

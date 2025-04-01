@@ -110,7 +110,11 @@ const CartWeb = (props: any) => {
             </p>
           </Link>
         </div>
-        <div className="w-3/10 h-96 bg-slate-100 rounded-2xl"></div>
+        <div className="w-3/10 h-96 bg-slate-100 rounded-2xl px-10">
+          <Button onClick={handleCheckOut} className="w-full">
+            Checkout
+          </Button>
+        </div>
       </div>
     </div>
   );
