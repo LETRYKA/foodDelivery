@@ -11,7 +11,6 @@ import { toast } from "sonner";
 import Cookies from "js-cookie";
 
 const API_URL = process.env.API_URL;
-console.log(API_URL)
 
 export function LoginForm({
   className,

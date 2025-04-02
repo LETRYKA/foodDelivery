@@ -1,20 +1,69 @@
-import { ArrowUpRight, ImageDown, Mail, MapPin } from "lucide-react";
+import {
+  ArrowUpRight,
+  ImageDown,
+  LoaderCircle,
+  Mail,
+  MapPin,
+} from "lucide-react";
 import Header from "./Header";
 import { Button } from "./ui/button";
 import EditSheet from "@/app/profile/_components/EditSheet";
 import { formatNumber, formatDate } from "@/utils/Formatter";
+import { handleFileUpload } from "@/utils/Cloudinary";
+import { useEffect, useState } from "react";
+import { PatchUser } from "@/lib/api";
+import { toast } from "sonner";
 
 const ProfileWeb = (props: any) => {
   const { user } = props;
-  console.log(user.data.orderedFoods);
+
+  const [profileImage, setProfileImage] = useState("");
+  const [coverImage, setCoverImage] = useState("");
+  const [isLoading, setIsLoading] = useState("");
+  console.log(profileImage);
+
+  useEffect(() => {
+    if (!profileImage || !user?.data?._id) return;
+
+    const updateUser = async () => {
+      try {
+        await PatchUser({
+          userId: user?.data?._id,
+          profile: profileImage,
+        });
+
+        toast.success("Updated successfully!");
+      } catch (err) {
+        console.error("Error updating user", err);
+        toast.error("Error updating user.");
+      }
+    };
+
+    updateUser();
+  }, [profileImage]);
+
   return (
     <>
       <div className="w-full h-full bg-white relative py-20">
         <div className="w-full h-full px-10 lg:px-20 xl:px-60">
           <div className=" top-0 w-full h-64 rounded-2xl overflow-hidden border-box relative group">
-            <div className="absolute px-5 py-2 bottom-4 right-4 flex-row text-[var(--background)] text-sm gap-2 rounded-lg bg-black/40 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer">
-              <ImageDown width={17} stroke="white" /> Upload image
-            </div>
+            {isLoading ? (
+              <div className="w-full h-full flex justify-center items-center">
+                <LoaderCircle className="animate-spin" />
+              </div>
+            ) : (
+              <div className="absolute px-5 py-2 bottom-4 right-4 flex-row text-[var(--background)] text-sm gap-2 rounded-lg bg-black/40 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer">
+                <ImageDown width={17} stroke="white" /> Upload image
+                <input
+                  type="file"
+                  accept="image/png, image/jpeg, image/webp"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  onChange={(e) =>
+                    handleFileUpload(e, setProfileImage, setIsLoading)
+                  }
+                />
+              </div>
+            )}
             <img
               className="w-full h-full object-cover"
               src="https://static1.howtogeekimages.com/wordpress/wp-content/uploads/2024/09/macos-sequoia-official-wallpaper.jpg"
@@ -23,12 +72,27 @@ const ProfileWeb = (props: any) => {
           <div className="w-full px-10 lg:px-20 xl:px-16 flex flex-row justify-between ">
             <div>
               <div className="w-40 h-auto aspect-square border-5 border-[#E8E8E8] bg-slate-400 rounded-full -mt-24 overflow-hidden border-box group relative">
-                <div className="absolute w-full h-full bg-black/40 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer">
-                  <ImageDown width={20} stroke="white" />
-                </div>
+                {isLoading ? (
+                  <div className="w-full h-full flex justify-center items-center">
+                    <LoaderCircle className="animate-spin" />
+                  </div>
+                ) : (
+                  <div className="absolute w-full h-full bg-black/40 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer">
+                    <ImageDown width={20} stroke="white" />
+                    <input
+                      type="file"
+                      accept="image/png, image/jpeg, image/webp"
+                      className="absolute inset-0 opacity-0 cursor-pointer"
+                      onChange={(e) =>
+                        handleFileUpload(e, setProfileImage, setIsLoading)
+                      }
+                    />
+                  </div>
+                )}
                 <img
                   className="w-full h-full object-cover"
                   src={user?.data?.profile}
+                  alt="Profile"
                 />
               </div>
               <h1 className="text-3xl font-black mt-2">{user?.data?.name}</h1>

@@ -41,31 +41,38 @@ export async function PatchUser({
   Password,
   Address,
   userId,
+  profile,
+  cover,
 }: {
-  Username: string;
-  Phone: string;
-  Email: string;
-  Password: string;
-  Address: string;
+  Username?: string;
+  Phone?: string;
+  Email?: string;
+  Password?: string;
+  Address?: string;
   userId: string;
+  profile?: string;
+  cover?: string;
 }) {
   const token = (await cookies()).get("token")?.value;
   if (!token) return { error: "Unauthorized" };
 
+  const payload: any = {};
+  if (Username) payload.name = Username;
+  if (Phone) payload.phoneNumber = Phone;
+  if (Email) payload.email = Email;
+  if (Password) payload.password = Password;
+  if (Address) payload.address = Address;
+  if (profile) payload.profile = profile;
+  if (cover) payload.cover = cover;
+
   try {
-    const res = await axios.put(
-      `${API_URL}/api/users/${userId}`,
-      {
-        name: Username,
-        email: Email,
-        password: Password,
-        phoneNumber: Phone,
-        address: Address,
+    const res = await axios.put(`${API_URL}/api/users/${userId}`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    });
+
     return res.data;
   } catch (err) {
     console.error("Error updating user:", err);
