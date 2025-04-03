@@ -34,7 +34,6 @@ const Cart = () => {
     );
     setCart(cartFromLocalStorage);
   };
-  console.log(cart);
 
   const handleCheckOut = async () => {
     try {
