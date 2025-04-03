@@ -1,8 +1,12 @@
 export const handleFileUpload = async (
   e: React.ChangeEvent<HTMLInputElement>,
-  imageType: string,
-  setUserImages: React.Dispatch<React.SetStateAction<Record<string, string>>>,
-  setIsLoading: React.Dispatch<React.SetStateAction<Record<string, boolean>>>
+  imageType: "profile" | "cover",
+  setUserImages: React.Dispatch<
+    React.SetStateAction<{ profile: string; cover: string }>
+  >,
+  setIsLoading: React.Dispatch<
+    React.SetStateAction<{ profile: boolean; cover: boolean }>
+  >
 ) => {
   const image = e.target.files?.[0];
   if (!image) return;

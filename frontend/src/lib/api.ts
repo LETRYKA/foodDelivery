@@ -130,6 +130,25 @@ export async function fetchCategory() {
   }
 }
 
+// Fetch food by Categories
+export async function fetchFoodByCategories({ id }: { id: string }) {
+  const token = (await cookies()).get("token")?.value;
+  if (!token) return { error: "Unauthorized" };
+
+  try {
+    const user = await fetchCurrentUser();
+    if (!user) return { error: "Unauthorized" };
+
+    const res = await axios.get(`${API_URL}/api/food/category/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error creating order:", err);
+    return { error: "Failed to create order" };
+  }
+}
+
 // Fetch User Orders
 export async function fetchOrder() {
   const token = (await cookies()).get("token")?.value;

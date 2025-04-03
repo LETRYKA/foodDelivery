@@ -127,6 +127,11 @@ export const deleteFood = async (req, res, next) => {
 };
 
 export const getFoodByCategory = async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+
+  const skip = (page - 1) * limit;
+
   try {
     const { categoryId } = req.params;
 
@@ -136,10 +141,14 @@ export const getFoodByCategory = async (req, res, next) => {
         .json({ success: false, message: "Unknown category id" });
     }
 
+    const totalCount = await Food.countDocuments();
+
     const foods = await Food.find({ categories: categoryId }).populate({
       path: "categories",
       select: "name",
     });
+
+    const totalPages = Math.ceil(totalCount / limit);
 
     if (foods.length === 0) {
       return res.status(404).json({
@@ -151,8 +160,15 @@ export const getFoodByCategory = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: foods,
+      pagination: {
+        currentPage: page,
+        totalPages: totalPages,
+        totalCount: totalCount,
+        limit: limit,
+      },
     });
   } catch (err) {
     next(err);
   }
+  // ?page=$1&limit=$2
 };

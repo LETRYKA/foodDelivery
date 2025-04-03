@@ -24,7 +24,9 @@ const Cart = () => {
       quantity: 0,
     },
   ]);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 550);
+  const [isMobile, setIsMobile] = useState<boolean>(() => {
+    return typeof window !== "undefined" ? window.innerWidth <= 550 : false;
+  });
 
   const getCartFromLocalStorage = () => {
     const cartFromLocalStorage = JSON.parse(
@@ -63,9 +65,9 @@ const Cart = () => {
   }, [cart]);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 550);
-    };
+    if (typeof window === "undefined") return;
+
+    const handleResize = () => setIsMobile(window.innerWidth <= 550);
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

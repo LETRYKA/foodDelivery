@@ -10,18 +10,31 @@ import {
 } from "lucide-react";
 import React from "react";
 import { Carousel, CarouselContent, CarouselItem } from "./ui/carousel";
-import { Card, CardContent } from "./ui/card";
-import { Button } from "./ui/button";
-import Marquee from "react-fast-marquee";
-import Link from "next/link";
-import Header from "./Header";
-import FoodList from "./FoodList";
-import { CartProvider } from "@/lib/CartContext";
 import CategorySkeleton from "./Skeleton/CategorySkeleton";
+import { CartProvider } from "@/lib/CartContext";
 import Autoplay from "embla-carousel-autoplay";
+import { Card, CardContent } from "./ui/card";
+import Marquee from "react-fast-marquee";
+import FoodList from "./FoodList";
+import { fetchFoodByCategories } from "@/lib/api";
+import { toast } from "sonner";
 
 const HomeWeb = (props: any) => {
   const { foodData, category, isLoading } = props;
+
+  const handleCategoryFilter = async (id: string) => {
+    try {
+      const res = await fetchFoodByCategories({
+        id,
+      });
+      console.log(res);
+      toast.success("Filtered items updated successfully!");
+    } catch (err) {
+      console.error("Error updating user", err);
+      toast.error("Error updating user.");
+    }
+  };
+
   return (
     <>
       <div className="w-full h-full bg-white pb-40">
@@ -82,7 +95,7 @@ const HomeWeb = (props: any) => {
           {Array(5)
             .fill(5)
             .map((item, index) => (
-              <p className="text-[var(--background)] font-black text-5xl font-[Monument_Extended] flex justify-center items-center gap-5 tracking-widest ml-5">
+              <p key={index} className="text-[var(--background)] font-black text-5xl font-[Monument_Extended] flex justify-center items-center gap-5 tracking-widest ml-5">
                 {/* <AtSign className="w-10 h-auto aspect-square text-[var(--background)]/30 ml-5" /> */}
                 OPENING SOON
               </p>
@@ -99,7 +112,10 @@ const HomeWeb = (props: any) => {
                   className="basis-1/5 sm:basis-1/7 md:basis-1/9 xl:basis-1/20"
                 >
                   <div className="flex flex-col justify-center items-center gap-2">
-                    <div className="w-14 h-14 bg-[var(--foreground)]/10 rounded-full flex justify-center items-center cursor-pointer">
+                    <div
+                      className="w-14 h-14 bg-[var(--foreground)]/10 rounded-full flex justify-center items-center cursor-pointer"
+                      onClick={() => handleCategoryFilter(category._id)}
+                    >
                       {/* <img
                         src="https://cdn3d.iconscout.com/3d/premium/thumb/meat-3d-illustration-download-in-png-blend-fbx-gltf-file-formats--delicious-logo-beef-chicken-food-pack-drink-illustrations-4497597.png?f=webp"
                         width={35}
