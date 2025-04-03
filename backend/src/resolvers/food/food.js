@@ -17,7 +17,7 @@ export const createFood = async (req, res, next) => {
       description,
       price,
       image,
-      categories,
+      categories: ["67bf3cb5f8bb892a1e1e62db"],
     });
     await newFood.save();
 
@@ -120,6 +120,37 @@ export const deleteFood = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Food item deleted successfully",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getFoodByCategory = async (req, res, next) => {
+  try {
+    const { categoryId } = req.params;
+
+    if (!categoryId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Unknown category id" });
+    }
+
+    const foods = await Food.find({ categories: categoryId }).populate({
+      path: "categories",
+      select: "name",
+    });
+
+    if (foods.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No items",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: foods,
     });
   } catch (err) {
     next(err);

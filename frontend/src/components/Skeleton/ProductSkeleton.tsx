@@ -1,5 +1,3 @@
-import { Button } from "../ui/button";
-import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { Skeleton } from "../ui/skeleton";
 
 const ProductSkeleton = () => {

@@ -1,6 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { useState, useEffect } from "react";
+import { PatchUser } from "@/lib/api";
+import { Lock } from "lucide-react";
+import { toast } from "sonner";
 import {
   Sheet,
   SheetClose,
@@ -20,12 +26,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { useState, useEffect } from "react";
-import { toast } from "sonner";
-import { PatchUser } from "@/lib/api";
-import { Lock } from "lucide-react";
 
 const EditDrawer = (props: any) => {
   const { user } = props;
@@ -91,17 +91,17 @@ const EditDrawer = (props: any) => {
       return;
     }
 
-    try {
-      await PatchUser({
-        // userId: user?._id,
-        // currentPassword: passwordData.currentPassword,
-        // newPassword: passwordData.newPassword,
-      });
-      toast.success("Password updated successfully!");
-    } catch (err) {
-      console.error("Error updating password", err);
-      toast.error("Error updating password.");
-    }
+    // try {
+    //   await PatchUser({
+    //     // userId: user?._id,
+    //     // currentPassword: passwordData.currentPassword,
+    //     // newPassword: passwordData.newPassword,
+    //   });
+    //   toast.success("Password updated successfully!");
+    // } catch (err) {
+    //   console.error("Error updating password", err);
+    //   toast.error("Error updating password.");
+    // }
   };
 
   return (
@@ -182,11 +182,11 @@ const EditDrawer = (props: any) => {
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="flex flex-col gap-3 mb-2">
-                  <Label htmlFor="currentpassword" className="text-white">
+                  <Label htmlFor="currentPassword" className="text-white">
                     Current Password
                   </Label>
                   <Input
-                    id="currentpassword"
+                    id="currentPassword"
                     name="currentPassword"
                     value={passwordData.currentPassword}
                     onChange={handlePasswordChange}
@@ -195,11 +195,11 @@ const EditDrawer = (props: any) => {
                   />
                 </div>
                 <div className="flex flex-col gap-3 mb-2">
-                  <Label htmlFor="newpassword" className="text-white">
+                  <Label htmlFor="newPassword" className="text-white">
                     New Password
                   </Label>
                   <Input
-                    id="newpassword"
+                    id="newPassword"
                     name="newPassword"
                     value={passwordData.newPassword}
                     onChange={handlePasswordChange}
@@ -208,11 +208,11 @@ const EditDrawer = (props: any) => {
                   />
                 </div>
                 <div className="flex flex-col gap-3 mb-2">
-                  <Label htmlFor="confirmpassword" className="text-white">
+                  <Label htmlFor="confirmPassword" className="text-white">
                     Confirm Password
                   </Label>
                   <Input
-                    id="confirmpassword"
+                    id="confirmPassword"
                     name="confirmPassword"
                     value={passwordData.confirmPassword}
                     onChange={handlePasswordChange}

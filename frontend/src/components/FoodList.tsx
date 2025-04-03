@@ -1,10 +1,10 @@
-import { fetchFood } from "@/lib/api";
-import { useCart } from "@/lib/CartContext";
-import { ShoppingBasket } from "lucide-react";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { toast } from "sonner";
 import FoodListSkeleton from "./Skeleton/FoodListSkeleton";
+import React, { useEffect, useState } from "react";
+import { ShoppingBasket } from "lucide-react";
+import { useCart } from "@/lib/CartContext";
+import { fetchFood } from "@/lib/api";
+import { toast } from "sonner";
+import Link from "next/link";
 import {
   Pagination,
   PaginationContent,
@@ -15,10 +15,10 @@ import {
 } from "@/components/ui/pagination";
 
 const FoodList = () => {
-  const [foodData, setFoodData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [foodData, setFoodData] = useState([]);
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -93,11 +93,14 @@ const FoodList = () => {
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                />
+                {currentPage === 1 ? (
+                  <span className="pagination-disabled">Previous</span>
+                ) : (
+                  <PaginationPrevious
+                    href="#"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                  />
+                )}
               </PaginationItem>
               {Array.from({ length: totalPages }, (_, i) => (
                 <PaginationItem key={i}>

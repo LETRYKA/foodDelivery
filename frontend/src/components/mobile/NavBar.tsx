@@ -1,9 +1,9 @@
 "use client";
 
 import { House, ListCheck, ReceiptText, UserRound } from "lucide-react";
-import React from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
+import React from "react";
 
 const NavBar = () => {
   const pathname = usePathname(); // Get the current route

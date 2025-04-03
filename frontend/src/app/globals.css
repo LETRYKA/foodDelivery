@@ -137,11 +137,17 @@
 
   body {
     @apply bg-background text-foreground;
-    background-color: #101010;
+    background-color: white;
     font-family: Manrope;
   }
 }
 
 .income::-webkit-scrollbar {
   display: none;
+}
+
+@media only screen and (max-width: 550px) {
+  body {
+    background-color: #101010;
+  }
 }

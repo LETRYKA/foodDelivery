@@ -13,6 +13,7 @@ import {
   getFoods,
   updateFood,
   deleteFood,
+  getFoodByCategory,
 } from "../resolvers/food/food.js";
 
 import {
@@ -35,6 +36,7 @@ foodRouter.delete("/food-order/:orderId", deleteOrder); // Delete food order by 
 foodRouter.post("/food", createFood); // Create food
 foodRouter.get("/food/:foodId", getFoodById); // Get single food item
 foodRouter.get("/food", getFoods); // Get all food
+foodRouter.get("/category/:categoryId", getFoodByCategory); // Get food by Category
 foodRouter.patch("/food/:foodId", updateFood); // Edit food item
 foodRouter.delete("/food/:foodId", deleteFood); // Delete food item
 

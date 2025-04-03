@@ -1,6 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { PatchUser } from "@/lib/api";
+import { Pencil } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import {
   Drawer,
   DrawerClose,
@@ -11,12 +16,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Pencil } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { toast } from "sonner";
-import { PatchUser } from "@/lib/api";
-import { fetchCurrentUser } from "@/lib/api";
 
 const EditDrawer = (props: any) => {
   const { user, type } = props;

@@ -1,11 +1,22 @@
-import { CreditCard } from "lucide-react";
-import React from "react";
-import { Button } from "../ui/button";
 import { CartProvider } from "@/lib/CartContext";
+import { CreditCard } from "lucide-react";
+import { Button } from "../ui/button";
 import InfoDrawer from "./infoDrawer";
 
-const CartMobile = (props: any) => {
+interface FoodItem {
+  id: number;
+  name: string;
+  price: number;
+}
+
+interface CartMobileProps {
+  cart: FoodItem[];
+  handleCheckOut: () => void;
+}
+
+const CartMobile: React.FC<CartMobileProps> = (props) => {
   const { cart, handleCheckOut } = props;
+
   return (
     <>
       <div className="w-full h-screen bg-white">
@@ -15,7 +26,7 @@ const CartMobile = (props: any) => {
           <div className="w-full flex flex-col">
             <div className="w-full flex flex-col justify-center items-center mt-7 gap-4">
               <CartProvider>
-                {cart.map((food, index) => (
+                {cart.map((food: FoodItem, index: number) => (
                   <InfoDrawer key={index} foodData={food} isCart={true} />
                 ))}
               </CartProvider>

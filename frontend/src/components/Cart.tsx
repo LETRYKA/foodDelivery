@@ -1,15 +1,14 @@
 "use client";
 
-import React from "react";
-import Header from "./Header";
-import { Button } from "./ui/button";
 import { ChevronLeft, Minus, Plus, X } from "lucide-react";
 import { useCart } from "@/lib/CartContext";
+import { Button } from "./ui/button";
 import Link from "next/link";
+import React from "react";
 
 const CartWeb = (props: any) => {
-  const { handleCheckOut } = props;
   const { cart, removeFromCart, updateQuantity } = useCart();
+  const { handleCheckOut } = props;
 
   const formattedPrice = (price: number, quantity: number) =>
     new Intl.NumberFormat("mn-MN", {

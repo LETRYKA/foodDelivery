@@ -1,5 +1,4 @@
 import { SignUpForm } from "@/components/register-form";
-import { ShieldCheck } from "lucide-react";
 
 const SignUp = () => {
   return (

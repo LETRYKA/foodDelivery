@@ -1,8 +1,6 @@
-// src/components/mobile/MobileLayout.tsx
 import { Manrope } from "next/font/google";
-import NavBar from "@/components/mobile/NavBar";
-import "@/app/globals.css";
 import { Toaster } from "sonner";
+import "@/app/globals.css";
 
 const manRope = Manrope({
   subsets: ["latin"],

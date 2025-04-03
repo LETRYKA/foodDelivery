@@ -1,8 +1,7 @@
 import { Bell, MapPin, Search, Settings2, ShoppingBasket } from "lucide-react";
-import Link from "next/link";
-import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
-import { useCart } from "@/lib/CartContext";
+import { Input } from "../ui/input";
+import Link from "next/link";
 
 const Header = () => {
   const [cart, setCart] = useState([]);

@@ -1,6 +1,11 @@
 "use client";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ReceiptText, ShoppingBasket } from "lucide-react";
+import DetailDrawer from "./_components/DetailDrawer";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { fetchOrder } from "@/lib/api";
 import {
   Card,
   CardContent,
@@ -9,16 +14,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ReceiptText, ShoppingBasket } from "lucide-react";
-import { fetchOrder } from "@/lib/api";
-import { useEffect, useState } from "react";
-import DetailDrawer from "./_components/DetailDrawer";
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
-
-  console.log(orders);
 
   useEffect(() => {
     const fetchData = async () => {

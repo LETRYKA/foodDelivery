@@ -1,24 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { fetchFood, fetchCategory } from "@/lib/api";
-import { useEffect, useState } from "react";
 import HomeMobile from "@/components/mobile/Home";
+import { useEffect, useState } from "react";
 import HomeWeb from "@/components/Home";
-
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { Input } from "@/components/ui/input";
-import InfoDrawer from "@/components/mobile/infoDrawer";
 
 interface CategoryType {
   name: string;
+  emoji: string;
 }
 
 export default function Home() {
@@ -29,8 +18,8 @@ export default function Home() {
 
   useEffect(() => {
     setIsLoading(true);
-    fetchFood().then((data) => {
-      setFoodData(data.data);
+    fetchFood(1, 10).then(({ foodItems }) => {
+      setFoodData(foodItems);
     });
     fetchCategory().then((data) => {
       setCategory(data.data);

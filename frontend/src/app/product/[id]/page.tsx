@@ -1,25 +1,30 @@
 "use client";
 
-import Header from "@/components/Header";
+import { Minus, Plus, ShoppingBasket } from "lucide-react";
+import ProductSkeleton from "@/components/Skeleton/ProductSkeleton";
+import { CartProvider, useCart } from "@/lib/CartContext";
 import { Button } from "@/components/ui/button";
+import FoodList from "@/components/FoodList";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { fetchFoodById } from "@/lib/api";
+import { toast } from "sonner";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { Minus, Plus, ShoppingBasket } from "lucide-react";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { fetchFoodById } from "@/lib/api";
-import FoodList from "@/components/FoodList";
-import { CartProvider, useCart } from "@/lib/CartContext";
-import { toast } from "sonner";
-import ProductSkeleton from "@/components/Skeleton/ProductSkeleton";
 
 const Product = () => {
   const param = useParams();
   const [quantity, setQuantity] = useState(1);
-  const [foodData, setFoodData] = useState([]);
+  const [foodData, setFoodData] = useState<{
+    id: string;
+    foodName: string;
+    price: number;
+    image: string;
+    description: string;
+  } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { addToCart } = useCart();
 
@@ -37,7 +42,13 @@ const Product = () => {
     setQuantity(Math.max(0, Math.min(400, quantity + adjustment)));
   }
 
-  const handleAddToCart = (food) => {
+  const handleAddToCart = (food: {
+    id: string;
+    foodName: string;
+    price: number;
+    image: string;
+    description: string;
+  }) => {
     addToCart({ food, quantity });
     toast.success("Successfully added to cart!");
   };
@@ -120,7 +131,7 @@ const Product = () => {
               </div>
 
               <Button
-                onClick={() => handleAddToCart(foodData)}
+                onClick={() => foodData && handleAddToCart(foodData)}
                 className="w-3/4 mt-10 py-7 rounded-full"
               >
                 <ShoppingBasket />

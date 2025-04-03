@@ -1,3 +1,8 @@
+import { InfoCard } from "@/app/profile/_components/InfoCard";
+import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
+import Cookies from "js-cookie";
+import Link from "next/link";
 import {
   Heart,
   MapPin,
@@ -19,15 +24,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "../ui/button";
-import { InfoCard } from "@/app/profile/_components/InfoCard";
-import Link from "next/link";
-import Cookies from "js-cookie";
-import { useRouter } from "next/navigation";
 
 const ProfileMobile = (props: any) => {
-  const { user } = props;
   const router = useRouter();
+  const { user } = props;
 
   const handleLogOut = () => {
     console.log(`LOGOUT`);

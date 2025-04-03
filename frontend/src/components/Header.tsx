@@ -1,5 +1,11 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { fetchCurrentUser } from "@/lib/api";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import Link from "next/link";
 import {
   Bell,
   CreditCard,
@@ -9,9 +15,6 @@ import {
   User,
   UserRound,
 } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { fetchCurrentUser } from "@/lib/api";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,15 +29,15 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "./ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
-import { cookies } from "next/headers";
 
 const Header = () => {
   const [cart, setCart] = useState([]);
-  const [user, setUser] = useState<string | null>(null);
+  interface User {
+    address?: string;
+    profile?: string;
+  }
+
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   const handleLogOut = () => {

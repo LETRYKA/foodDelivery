@@ -1,19 +1,29 @@
 "use client";
 
-import { ShoppingBasket } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
-import Header from "./Header";
+import { CartProvider } from "@/lib/CartContext";
+import { ShoppingBasket } from "lucide-react";
+import InfoDrawer from "./infoDrawer";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
-import { CartProvider } from "@/lib/CartContext";
-import InfoDrawer from "./infoDrawer";
-import { useState } from "react";
+import Header from "./Header";
 
 interface CategoryType {
   name: string;
+  emoji: string;
 }
 
-const HomeMobile = (props: any) => {
+interface FoodType {
+  id: number;
+  name: string;
+  price: number;
+  image: string;
+}
+
+const HomeMobile = (props: {
+  foodData: FoodType[];
+  category: CategoryType[];
+}) => {
   const { foodData, category } = props;
   return (
     <>

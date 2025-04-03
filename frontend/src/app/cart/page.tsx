@@ -1,14 +1,11 @@
 "use client";
 
-import InfoDrawer from "@/components/mobile/infoDrawer";
-import { useEffect, useState } from "react";
 import { CartProvider } from "@/lib/CartContext";
-import { Button } from "@/components/ui/button";
-import { CreditCard } from "lucide-react";
+import CartMobile from "@/components/mobile/Cart";
+import { useEffect, useState } from "react";
+import CartWeb from "@/components/Cart";
 import { CreateOrder } from "@/lib/api";
 import { toast } from "sonner";
-import CartMobile from "@/components/mobile/Cart";
-import CartWeb from "@/components/Cart";
 
 interface ItemData {
   foodId: string;
@@ -18,7 +15,7 @@ interface ItemData {
 
 const Cart = () => {
   const [cart, setCart] = useState<
-    { food: { _id: string }; quantity: number }[]
+    { id: string; name: string; price: number; quantity: number }[]
   >([]);
   const [items, setItems] = useState<ItemData[]>([
     {
@@ -58,7 +55,7 @@ const Cart = () => {
 
   useEffect(() => {
     const formattedItems = cart.map((item) => ({
-      foodId: item.food._id,
+      foodId: item.id,
       items: [],
       quantity: item.quantity,
     }));
@@ -77,7 +74,15 @@ const Cart = () => {
   return (
     <>
       {isMobile ? (
-        <CartMobile cart={cart} handleCheckOut={handleCheckOut} />
+        <CartMobile
+          cart={cart.map((item) => ({
+            id: Number(item.id),
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity,
+          }))}
+          handleCheckOut={handleCheckOut}
+        />
       ) : (
         <CartProvider>
           <CartWeb cart={cart} handleCheckOut={handleCheckOut} />
