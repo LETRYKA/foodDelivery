@@ -8,6 +8,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner";
+import Cookies from "js-cookie";
 
 // GET API URL
 const API_URL = process.env.API_URL;
@@ -32,8 +33,12 @@ export function LoginForm({
         withCredentials: true,
       });
       setIsLoading(false);
+
+      const token = res.data.data.token;
+
+      Cookies.set("token", token, { expires: 7, path: "/" });
+
       router.push("/dashboard");
-      console.log(res);
     } catch (err: any) {
       setIsLoading(false);
       toast.error(err.response?.data?.message);

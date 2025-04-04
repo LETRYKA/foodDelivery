@@ -6,6 +6,22 @@ import axios from "axios";
 // GET API URL
 const API_URL = process.env.API_URL;
 
+export async function fetchCurrentUser() {
+  try {
+    const token = (await cookies()).get("token")?.value;
+    if (!token) return null;
+
+    const res = await axios.get(`${API_URL}/api/users/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching current user:", err);
+    return null;
+  }
+}
+
 // ORDER API
 
 export async function fetchOrders() {

@@ -1,5 +1,7 @@
+"use client";
+
 import { BellIcon, EnvelopeIcon } from "@heroicons/react/24/solid";
-import { Calendar, Inbox } from "lucide-react";
+import { Calendar, Inbox, LogOut, ShoppingBasket, User } from "lucide-react";
 import Profile from "./Profile";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
@@ -9,25 +11,49 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
-
-const fetchCurrentUser = async (token: string) => {
-  try {
-    const res = await axios.get("http://localhost:8080/api/users/me", {
-      headers: { Authorization: `Bearer ${token}` },
-      withCredentials: true,
-    });
-    return res.data;
-  } catch (err) {
-    return null;
-  }
-};
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
+import { fetchCurrentUser } from "@/lib/api";
 
 const Header = async () => {
-  const cookieStore = cookies();
-  const token = (await cookieStore).get("token")?.value;
-  const user = token ? await fetchCurrentUser(token) : null;
+  const [user, setUser] = useState<any>({});
+  const [isLoading, setIsLoading] = useState(false);
   const today = new Date();
+  const router = useRouter();
+
+  console.log(user);
+
+  const getUser = async () => {
+    try {
+      const data: any = await fetchCurrentUser();
+      if (!data) {
+        console.log(`NOT`);
+        redirect("/auth/sign-in");
+      } else {
+        setUser(data);
+        console.log(`FETCH DONE`);
+      }
+    } catch (error) {
+      console.log("Error fetching current user:", error);
+    }
+  };
+
+  const handleLogOut = () => {
+    Cookies.remove("token", { path: "/" });
+    router.push("/auth/sign-in");
+  };
 
   const dateFormat: string = today.toLocaleDateString("en-US", {
     weekday: "short",
@@ -35,9 +61,9 @@ const Header = async () => {
     day: "numeric",
   });
 
-  if (!user) {
-    redirect("/auth/sign-in");
-  }
+  useEffect(() => {
+    getUser();
+  }, []);
 
   return (
     <>
@@ -107,7 +133,37 @@ const Header = async () => {
             </div>
           </div>
           <hr className="border-t-0 border-r-1 border-[var(--sidebar-ring)] h-2/4" />
-          <Profile user={user.data} />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Profile user={user.data} />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48 dark mt-2">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <Link href={`/profile`}>
+                  <DropdownMenuItem>
+                    <User />
+                    <span>Profile</span>
+                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </Link>
+                <Link href={`/cart`}>
+                  <DropdownMenuItem>
+                    <ShoppingBasket />
+                    <span>Cart</span>
+                    <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </Link>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="group" onClick={handleLogOut}>
+                  <LogOut className="group-hover:stroke-red-300" />
+                  <span className="group-hover:text-red-300">Log out</span>
+                  <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </>
