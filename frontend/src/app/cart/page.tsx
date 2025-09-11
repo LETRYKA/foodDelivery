@@ -3,6 +3,8 @@
 import { CartProvider } from "@/lib/CartContext";
 import CartMobile from "@/components/mobile/Cart";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 import CartWeb from "@/components/Cart";
 import { CreateOrder } from "@/lib/api";
 import { toast } from "sonner";
@@ -16,6 +18,10 @@ interface ItemData {
 const Cart = () => {
   const [cart, setCart] = useState<any[]>([]);
   const [items, setItems] = useState<ItemData[]>([]);
+  const router = useRouter();
+
+  // Allow viewing cart without auth; enforce auth only on checkout
+
   const [isMobile, setIsMobile] = useState<boolean>(() => {
     return typeof window !== "undefined" ? window.innerWidth <= 550 : false;
   });
@@ -28,6 +34,12 @@ const Cart = () => {
   };
 
   const handleCheckOut = async () => {
+    const token = Cookies.get("token");
+    if (!token) {
+      toast.info("Нэвтэрч орсны дараа үргэлжлүүлнэ үү.");
+      router.push("/auth/sign-in");
+      return;
+    }
     try {
       const response = await CreateOrder({ items });
       if (response?.success) {

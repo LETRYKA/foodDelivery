@@ -20,7 +20,7 @@ import { fetchFoodByCategories } from "@/lib/api";
 import { toast } from "sonner";
 
 const HomeWeb = (props: any) => {
-  const { foodData, category, isLoading } = props;
+  const { foodData, category = [], isLoading } = props;
 
   const handleCategoryFilter = async (id: string) => {
     try {
@@ -109,7 +109,7 @@ const HomeWeb = (props: any) => {
         ) : (
           <Carousel className="w-full px-10 md:px-36 mt-15">
             <CarouselContent>
-              {category.map((category: any, index: any) => (
+              {(category || []).map((category: any, index: any) => (
                 <CarouselItem
                   key={index}
                   className="basis-1/5 sm:basis-1/7 md:basis-1/9 xl:basis-1/20"

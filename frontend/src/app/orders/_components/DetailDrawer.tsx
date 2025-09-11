@@ -26,20 +26,16 @@ interface Order {
 }
 
 interface DetailDrawerProps {
-  key: string;
   order: Order;
 }
 import InfoDrawer from "@/components/mobile/infoDrawer";
 
-const DetailDrawer: React.FC<DetailDrawerProps> = ({ key, order }) => {
+const DetailDrawer: React.FC<DetailDrawerProps> = ({ order }) => {
   return (
     <>
       <Drawer>
         <DrawerTrigger asChild className="w-full">
-          <div
-            key={key}
-            className="w-full h-28 bg-[var(--foreground)]/5 rounded-[var(--radius)] flex flex-row justify-start items-center overflow-hidden gap-4 pr-3 border border-[var(--border)]/10 cursor-pointer"
-          >
+          <div className="w-full h-28 bg-[var(--foreground)]/5 rounded-[var(--radius)] flex flex-row justify-start items-center overflow-hidden gap-4 pr-3 border border-[var(--border)]/10 cursor-pointer">
             <div
               className="h-full w-auto bg-slate-200 aspect-square bg-cover bg-center rounded-[var(--radius)]"
               style={{

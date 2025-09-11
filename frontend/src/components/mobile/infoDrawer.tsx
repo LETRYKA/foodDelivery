@@ -32,7 +32,7 @@ import { Minus, Plus, SaveAllIcon, ShoppingCart, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const InfoDrawer = (props: any) => {
-  const { foodData, isCart, key } = props;
+  const { foodData, isCart } = props;
   interface Food {
     _id: string;
     foodName: string;
@@ -82,10 +82,7 @@ const InfoDrawer = (props: any) => {
     <div className="dark z-40 w-full">
       <Drawer>
         <DrawerTrigger asChild>
-          <div
-            key={key}
-            className="w-full h-32 bg-[var(--foreground)]/5 rounded-[var(--radius)] flex flex-row justify-start items-center overflow-hidden gap-4 pr-3 border border-[var(--border)]/10 cursor-pointer"
-          >
+          <div className="w-full h-32 bg-[var(--foreground)]/5 rounded-[var(--radius)] flex flex-row justify-start items-center overflow-hidden gap-4 pr-3 border border-[var(--border)]/10 cursor-pointer">
             <div
               className="h-full w-auto bg-slate-200 aspect-square bg-cover bg-center rounded-[var(--radius)]"
               style={{

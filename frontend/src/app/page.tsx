@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 
 export default function Main() {
-  redirect("/home");
-  return <div className="">Redirecting...</div>;
+  permanentRedirect("/home");
 }

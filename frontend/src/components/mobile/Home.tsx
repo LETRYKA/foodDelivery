@@ -22,9 +22,9 @@ interface FoodType {
 
 const HomeMobile = (props: {
   foodData: FoodType[];
-  category: CategoryType[];
+  category?: CategoryType[];
 }) => {
-  const { foodData, category } = props;
+  const { foodData, category = [] } = props;
   return (
     <>
       <Header />
@@ -33,7 +33,7 @@ const HomeMobile = (props: {
           {/* START */}
           <Carousel className="w-full">
             <CarouselContent>
-              {category.map((category, index) => (
+              {(category || []).map((category, index) => (
                 <CarouselItem key={index} className="basis-1/5">
                   <div className="flex flex-col justify-center items-center gap-2">
                     <div className="w-14 h-14 bg-[#262626] rounded-full flex justify-center items-center cursor-pointer">
@@ -51,7 +51,7 @@ const HomeMobile = (props: {
           </Carousel>
           {/* END */}
         </div>
-        <p className="w-full text-xl font-bold mt-7 mb-3">Popular items</p>
+        <p className="w-full text-xl font-bold mt-7 mb-3">Эрэлттэй хоол</p>
         <Carousel className="w-full">
           <CarouselContent>
             {Array.from({ length: 5 }).map((_, index) => (
@@ -70,7 +70,7 @@ const HomeMobile = (props: {
                         Hamburger
                       </p>
                       <div className="bg-[var(--background)]/20 absolute h-4 p-4 rounded-full flex justify-center items-center top-4 right-4">
-                        <p className="text-xs text-white">from 430$</p>
+                        <p className="text-xs text-white">14'400₮</p>
                       </div>
                       <div className="absolute bottom-0 w-full justify-center items-center p-4">
                         <Button
@@ -78,7 +78,7 @@ const HomeMobile = (props: {
                           className="w-full py-6 rounded-full cursor-pointer"
                         >
                           <ShoppingBasket />
-                          Add to Cart
+                          Сагслах
                         </Button>
                       </div>
                     </div>
