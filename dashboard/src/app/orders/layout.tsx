@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
-import { Funnel_Display } from "next/font/google";
+import { Inter } from "next/font/google";
 import SideBar from "@/components/SideBar";
 import Header from "@/components/Header";
 import { Toaster, toast } from "sonner";
 import "@/app/globals.css";
 
-const funnelDisplay = Funnel_Display({
-  weight: ["300", "400", "500", "600", "700", "800"],
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-funnel-display",
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -22,7 +21,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={funnelDisplay.variable}>
+    <html lang="en" className={inter.variable}>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <body className="w-full h-screen flex">
         <SideBar />

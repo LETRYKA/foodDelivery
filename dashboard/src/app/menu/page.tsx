@@ -72,7 +72,7 @@ const Menu = () => {
       <div className="w-full h-full flex flex-row items-start gap-7">
         <div className="w-1/6 h-auto bg-[var(--background)] rounded-[var(--radius)] py-4 px-6 pb-10">
           <CreateDialog dataRefresh={getFoods} />
-          <p className="text-lg font-semibold">Filters</p>
+          <p className="text-lg font-semibold">Филтер</p>
           <div className="flex flex-col mt-4 gap-4">
             <p className="text-sm text-[var(--foreground)]/30 font-regular -mb-1">
               Categories

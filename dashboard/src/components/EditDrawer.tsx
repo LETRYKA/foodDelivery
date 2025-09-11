@@ -36,6 +36,7 @@ interface FoodData {
   foodImage: string;
   price: number;
   image: string;
+  categories?: string[];
 }
 
 interface Props {
@@ -80,7 +81,7 @@ export function EditDrawer({ foodId, dataRefresh, Category }: Props) {
         foodPrice: Number(inputData.foodPrice),
         foodDescription: inputData.foodDescription,
         foodImage: inputData.foodImage,
-        Category: inputData.Category,
+        Category: String((inputData as any).Category?.[0] ?? ""),
       });
       dataRefresh();
       toast.success("Successfully updated food!");
@@ -158,7 +159,7 @@ export function EditDrawer({ foodId, dataRefresh, Category }: Props) {
         foodPrice: foodData.price.toString(),
         foodDescription: foodData.description,
         foodImage: foodData.image,
-        Category: foodData.categories,
+        Category: (foodData as any).categories ?? [],
       });
     }
   }, [foodData]);
@@ -168,7 +169,7 @@ export function EditDrawer({ foodId, dataRefresh, Category }: Props) {
       <DrawerTrigger asChild>
         <button className="w-full h-12 bg-[var(--foreground)] flex flex-row justify-center items-center gap-2 rounded-[var(--radius)] mt-6 group hover:bg-[var(--background)] border transition-all duration-100 ease-in cursor-pointer mb-2">
           <p className="text-[var(--background)] text-sm flex group-hover:text-[var(--foreground)] transition-all duration-100 ease-in">
-            Edit food
+            Засварлах
           </p>
           <ArrowUpRight
             width={18}
@@ -273,10 +274,10 @@ export function EditDrawer({ foodId, dataRefresh, Category }: Props) {
           </div>
           <DrawerFooter>
             <DrawerClose asChild>
-              <Button onClick={updateFoodData}>Save</Button>
+              <Button onClick={updateFoodData}>Хадгалах</Button>
             </DrawerClose>
             <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline">Буцах</Button>
             </DrawerClose>
           </DrawerFooter>
         </div>

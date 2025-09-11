@@ -123,7 +123,7 @@ export const columns: ColumnDef<Payment>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Customer
+        Хэрэглэгч
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -159,7 +159,7 @@ export const columns: ColumnDef<Payment>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Orders
+        Захиалга
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -211,7 +211,7 @@ export const columns: ColumnDef<Payment>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Phone
+        Утасны дугаар
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -231,7 +231,7 @@ export const columns: ColumnDef<Payment>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Date
+        Огноо
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -260,7 +260,7 @@ export const columns: ColumnDef<Payment>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Price
+        Үнийн дүн
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -280,7 +280,7 @@ export const columns: ColumnDef<Payment>[] = [
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Address
+        Хаяг
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -326,7 +326,7 @@ export const columns: ColumnDef<Payment>[] = [
       const handleStatusChange = async (newStatus: Payment["status"]) => {
         try {
           await updateStatus({ orderId: row.original._id, newStatus });
-          table.options.meta?.updateData((old: Payment[]) =>
+          (table.options.meta as any)?.updateData((old: Payment[]) =>
             old.map((item) =>
               item._id === row.original._id
                 ? { ...item, status: newStatus }
@@ -355,19 +355,18 @@ export const columns: ColumnDef<Payment>[] = [
                   toast.success("Order ID copied");
                 }}
               >
-                <Copy size={13} className="mr-2" /> Copy Order
+                <Copy size={13} className="mr-2" /> ID Хуулах
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setEditOpen(true)}>
-                <Pencil size={13} className="mr-2" /> Edit Order
+                <Pencil size={13} className="mr-2" /> Төлөв өөрчлөх
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-destructive"
                 onClick={async () => {
-                  if (!confirm("Are you sure you want to delete this order?"))
-                    return;
+                  if (!confirm("Та усгахдаа итгэлтэй байна уу?")) return;
                   try {
                     await deleteOrder({ orderId: row.original._id });
-                    table.options.meta?.updateData((old: Payment[]) =>
+                    (table.options.meta as any)?.updateData((old: Payment[]) =>
                       old.filter((item) => item._id !== row.original._id)
                     );
                     toast.success("Order deleted");
@@ -376,14 +375,14 @@ export const columns: ColumnDef<Payment>[] = [
                   }
                 }}
               >
-                <Trash2 size={13} className="mr-2" /> Delete Order
+                <Trash2 size={13} className="mr-2" /> Устгах
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <Dialog open={editOpen} onOpenChange={setEditOpen}>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Edit Order Status</DialogTitle>
+                <DialogTitle>Төлөв өөрчлөх</DialogTitle>
               </DialogHeader>
               <div className="space-y-2">
                 {Object.keys(statusStyles).map((status) => (
@@ -457,7 +456,7 @@ const TableOrder = ({ orders }: { orders: { data: Payment[] } }) => {
           updateStatus({ orderId: row.original._id, newStatus })
         )
       );
-      table.options.meta?.updateData((old: Payment[]) =>
+      (table.options.meta as any)?.updateData((old: Payment[]) =>
         old.map((order) =>
           selectedRows.some((row) => row.original._id === order._id)
             ? { ...order, status: newStatus }
@@ -545,7 +544,10 @@ const TableOrder = ({ orders }: { orders: { data: Payment[] } }) => {
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="py-4 border-transparent">
+                    <TableCell
+                      key={cell.id}
+                      className="py-4 border-transparent"
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

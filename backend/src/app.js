@@ -8,8 +8,24 @@ import cors from "cors";
 import "dotenv/config";
 
 const app = express();
-const port = process.env.PORT;
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+const port = process.env.PORT || 4000;
+
+// Allow local frontends to access the API with credentials
+const allowedOrigins = [
+  "http://localhost:3000", // frontend
+  "http://localhost:3001", // dashboard
+  "http://localhost:3002", // optional
+];
+
+const corsOptions = {
+  origin: allowedOrigins,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 mongoose.connect(process.env.MONGODB_STRING);
 
 app.use(express.json());

@@ -1,7 +1,7 @@
 "use client";
 
-const CLOUDINARY_URL = process.env.NEXT_PUBLIC_CLOUDINARY_URL;
-const UPLOAD_PRESET = process.env.NEXT_PUBLIC_UPLOAD_PRESET;
+const CLOUDINARY_URL = process.env.NEXT_PUBLIC_CLOUDINARY_URL ?? "";
+const UPLOAD_PRESET = process.env.NEXT_PUBLIC_UPLOAD_PRESET ?? "";
 import { CreateFood } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,12 +46,12 @@ export function CreateDialog(props: any) {
 
     const data = new FormData();
     data.append("file", image);
-    data.append("upload_preset", UPLOAD_PRESET);
+    data.append("upload_preset", String(UPLOAD_PRESET));
 
     try {
       setLoading(true);
 
-      const res = await fetch(CLOUDINARY_URL, {
+      const res = await fetch(String(CLOUDINARY_URL), {
         method: "POST",
         body: data,
       });
@@ -74,6 +74,7 @@ export function CreateDialog(props: any) {
         foodPrice: Number(inputData.foodPrice),
         foodDescription: inputData.foodDescription,
         foodImage: inputData.foodImage,
+        categoryId: [],
       });
       dataRefresh();
       toast.success("Successfully Created food!");
@@ -87,7 +88,7 @@ export function CreateDialog(props: any) {
       <DialogTrigger asChild>
         <div className="w-full h-14 my-3 bg-[#090D1B] rounded-[var(--radius)] flex flex-row justify-center items-center gap-3 cursor-pointer">
           <p className="text-sm text-[var(--background)] font-bold">
-            Create New Dish
+            Шинэ хоол үүсгэх
           </p>
           <div className="h-[50%] aspect-square bg-[var(--background)] rounded-sm flex justify-center items-center">
             <Plus className="stroke-[var(--foreground)]" width={15} />
@@ -98,14 +99,14 @@ export function CreateDialog(props: any) {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Sticker width={20} />
-            Create Dish
+            Хоол үүсгэх
           </DialogTitle>
           <hr className="my-2" />
         </DialogHeader>
         <div className="grid grid-cols-2 gap-3 py-4">
           <div className="flex flex-col justify-start items-start gap-2">
             <Label htmlFor="foodName" className="text-right">
-              Dish Name
+              Хоолны нэр
             </Label>
             <Input
               name="foodName"
@@ -117,7 +118,7 @@ export function CreateDialog(props: any) {
           </div>
           <div className="flex flex-col justify-start items-start gap-2">
             <Label htmlFor="foodPrice" className="text-right">
-              Price
+              Үнэ
             </Label>
             <Input
               name="foodPrice"
@@ -134,7 +135,7 @@ export function CreateDialog(props: any) {
         <Textarea
           id="foodDescription"
           name="foodDescription"
-          placeholder="Food Description"
+          placeholder="Товч тайлбар"
           className="-mt-4 max-h-50"
           onChange={handleTextareaChange}
         />
@@ -159,11 +160,9 @@ export function CreateDialog(props: any) {
                         height={17}
                       />
                     </div>
-                    <p className="text-xs mt-2">
-                      Choose a file or drag & drop it here
-                    </p>
+                    <p className="text-xs mt-2">Хоолны үндсэн зураг оруулах</p>
                     <p className="text-xs text-[var(--foreground)]/40">
-                      5MB max file size
+                      5MB хамгийн ихдээ
                     </p>
                   </>
                 )
@@ -189,7 +188,7 @@ export function CreateDialog(props: any) {
         </div>
         <DialogFooter>
           <Button type="submit" onClick={createFoodData}>
-            Save changes
+            Хадгалах
           </Button>
         </DialogFooter>
       </DialogContent>

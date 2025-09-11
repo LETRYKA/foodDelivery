@@ -32,7 +32,7 @@ const Income = (props: { orders: Orders }) => {
       <div className="w-full flex justify-between items-center mt-5">
         <p className="text-lg font-medium text-[var(--foreground)] flex item-center gap-1">
           <BuildingLibraryIcon className="fill-[var(--primary)]" width={17} />{" "}
-          Income
+          Сүүлийн захиалгууд
         </p>
         <Ellipsis width={20} className="cursor-pointer" />
       </div>

@@ -43,7 +43,7 @@ const FoodList = () => {
 
   return (
     <div className="w-full px-10 md:px-36 mt-15">
-      <p className="text-3xl font-black">Our Menu</p>
+      <p className="text-3xl font-black">Бидний меню</p>
 
       {isLoading ? (
         <FoodListSkeleton />
@@ -98,7 +98,10 @@ const FoodList = () => {
                 ) : (
                   <PaginationPrevious
                     href="#"
-                    onClick={() => handlePageChange(currentPage - 1)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(currentPage - 1);
+                    }}
                   />
                 )}
               </PaginationItem>
@@ -107,7 +110,10 @@ const FoodList = () => {
                   <PaginationLink
                     href="#"
                     isActive={i + 1 === currentPage}
-                    onClick={() => handlePageChange(i + 1)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(i + 1);
+                    }}
                   >
                     {i + 1}
                   </PaginationLink>
@@ -118,7 +124,10 @@ const FoodList = () => {
                 {currentPage < totalPages && (
                   <PaginationNext
                     href="#"
-                    onClick={() => handlePageChange(currentPage + 1)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(currentPage + 1);
+                    }}
                   />
                 )}
               </PaginationItem>

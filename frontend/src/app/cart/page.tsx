@@ -14,16 +14,8 @@ interface ItemData {
 }
 
 const Cart = () => {
-  const [cart, setCart] = useState<
-    { id: string; name: string; price: number; quantity: number }[]
-  >([]);
-  const [items, setItems] = useState<ItemData[]>([
-    {
-      foodId: "",
-      items: [],
-      quantity: 0,
-    },
-  ]);
+  const [cart, setCart] = useState<any[]>([]);
+  const [items, setItems] = useState<ItemData[]>([]);
   const [isMobile, setIsMobile] = useState<boolean>(() => {
     return typeof window !== "undefined" ? window.innerWidth <= 550 : false;
   });
@@ -55,11 +47,14 @@ const Cart = () => {
   }, []);
 
   useEffect(() => {
-    const formattedItems = cart.map((item) => ({
-      foodId: item.id,
-      items: [],
-      quantity: item.quantity,
-    }));
+    const formattedItems: ItemData[] = cart
+      .filter((item) => item)
+      .map((item: any) => ({
+        foodId: item?.food?._id ?? item?.id ?? "",
+        items: [],
+        quantity: item?.quantity ?? 0,
+      }))
+      .filter((i) => i.foodId && i.quantity > 0);
     setItems(formattedItems);
   }, [cart]);
 
@@ -76,11 +71,11 @@ const Cart = () => {
     <>
       {isMobile ? (
         <CartMobile
-          cart={cart.map((item) => ({
-            id: Number(item.id),
-            name: item.name,
-            price: item.price,
-            quantity: item.quantity,
+          cart={cart.map((item: any) => ({
+            id: Number(item?.food?._id ?? item?.id ?? 0),
+            name: item?.food?.foodName ?? item?.name ?? "",
+            price: item?.food?.price ?? item?.price ?? 0,
+            quantity: item?.quantity ?? 0,
           }))}
           handleCheckOut={handleCheckOut}
         />

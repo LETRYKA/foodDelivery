@@ -108,20 +108,17 @@ const EditDrawer = (props: any) => {
     <Sheet>
       <SheetTrigger asChild>
         <Button className="rounded-full py-6 px-8 font-semibold">
-          Edit Profile
+          Профайл засах
         </Button>
       </SheetTrigger>
       <SheetContent className="dark">
         <SheetHeader className="px-7 mt-5">
-          <SheetTitle className="text-2xl font-bold">Edit profile</SheetTitle>
-          <SheetDescription>
-            Make changes to your profile here. Click save when you're done.
-          </SheetDescription>
+          <SheetTitle className="text-2xl font-bold">Профайл засах</SheetTitle>
         </SheetHeader>
         <div className="grid gap-4 py-4 px-8">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="Username" className="text-right text-white">
-              Name
+              Нэр
             </Label>
             <Input
               id="Username"
@@ -133,7 +130,7 @@ const EditDrawer = (props: any) => {
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="Phone" className="text-right text-white">
-              Phone
+              Утас
             </Label>
             <Input
               id="Phone"
@@ -145,7 +142,7 @@ const EditDrawer = (props: any) => {
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="Email" className="text-right text-white">
-              Email
+              Емэйл
             </Label>
             <Input
               id="Email"
@@ -157,7 +154,7 @@ const EditDrawer = (props: any) => {
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="Address" className="text-right text-white">
-              Address
+              Хаяг
             </Label>
             <Input
               id="Address"
@@ -171,19 +168,17 @@ const EditDrawer = (props: any) => {
             <DialogTrigger asChild>
               <Button className="mt-6 bg-[var(--foreground)] hover:bg-[var(--foreground)]/90">
                 <Lock />
-                Change Password
+                Нууц үг солих
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] dark">
               <DialogHeader>
-                <DialogTitle className="text-white">
-                  Change Password
-                </DialogTitle>
+                <DialogTitle className="text-white">Нууц үг солих</DialogTitle>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="flex flex-col gap-3 mb-2">
                   <Label htmlFor="currentPassword" className="text-white">
-                    Current Password
+                    Одоогийн нууц үг
                   </Label>
                   <Input
                     id="currentPassword"
@@ -196,7 +191,7 @@ const EditDrawer = (props: any) => {
                 </div>
                 <div className="flex flex-col gap-3 mb-2">
                   <Label htmlFor="newPassword" className="text-white">
-                    New Password
+                    Шинэ нууц үг
                   </Label>
                   <Input
                     id="newPassword"
@@ -209,7 +204,7 @@ const EditDrawer = (props: any) => {
                 </div>
                 <div className="flex flex-col gap-3 mb-2">
                   <Label htmlFor="confirmPassword" className="text-white">
-                    Confirm Password
+                    Шинэ нууц үг
                   </Label>
                   <Input
                     id="confirmPassword"
@@ -227,7 +222,7 @@ const EditDrawer = (props: any) => {
                   className="text-white"
                   onClick={handlePasswordSubmit}
                 >
-                  Save changes
+                  Хадгалах
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -240,7 +235,7 @@ const EditDrawer = (props: any) => {
               className="text-white py-6"
               onClick={updateUserData}
             >
-              Save changes
+              Хагалах
             </Button>
           </SheetClose>
         </SheetFooter>

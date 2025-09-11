@@ -95,9 +95,12 @@ const HomeWeb = (props: any) => {
           {Array(5)
             .fill(5)
             .map((item, index) => (
-              <p key={index} className="text-[var(--background)] font-black text-5xl font-[Monument_Extended] flex justify-center items-center gap-5 tracking-widest ml-5">
+              <p
+                key={index}
+                className="text-[var(--background)] font-black text-5xl font-[Monument_Extended] flex justify-center items-center gap-5 tracking-widest ml-5"
+              >
                 {/* <AtSign className="w-10 h-auto aspect-square text-[var(--background)]/30 ml-5" /> */}
-                OPENING SOON
+                FOOD DELIVERY
               </p>
             ))}
         </Marquee>

@@ -134,7 +134,7 @@ const ProfileWeb = (props: any) => {
               </div>
             </div>
           </div>
-          <p className="mt-10 text-xl font-bold">Recent Orders</p>
+          <p className="mt-10 text-xl font-bold">Сүүлийн захиалгууд</p>
           <div className="w-full h-full mt-5 rounded-3xl grid grid-cols-4 grid-rows-auto gap-6">
             {/* CARD */}
             {user.data?.orderedFood?.length > 0 ? (
@@ -173,7 +173,7 @@ const ProfileWeb = (props: any) => {
                       <div className="flex gap-2 mt-4">
                         <div className="w-2/4 bg-[var(--foreground)]/5 flex flex-col p-3 rounded-sm">
                           <p className="text-xs text-[var(--foreground)]/40">
-                            Ordered time
+                            Захиалсан огноо
                           </p>
                           <p className="text-base text-[var(--foreground)] font-semibold">
                             {formatDate(order?.updatedAt)}
@@ -181,7 +181,7 @@ const ProfileWeb = (props: any) => {
                         </div>
                         <div className="w-2/4 bg-[var(--foreground)]/5 flex flex-col p-3 rounded-sm">
                           <p className="text-xs text-[var(--foreground)]/40">
-                            Total Payment
+                            Нийт
                           </p>
                           <p className="text-base text-[var(--foreground)] font-semibold">
                             {formatNumber(order?.totalPrice)}₮
@@ -215,7 +215,7 @@ const ProfileWeb = (props: any) => {
                         </div>
                       ))}
                       <Button className="w-full mt-10 py-6 bg-[var(--foreground)] hover:bg-[var(--foreground)]/80">
-                        Odoogoor ajilahgui <ArrowUpRight />
+                        Дэлгэрэнгүй (тун удахгүй) <ArrowUpRight />
                       </Button>
                     </div>
                   )

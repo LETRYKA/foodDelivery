@@ -19,6 +19,11 @@ const eslintConfig = [
       "jsx-a11y/alt-text": "off", // Disable alt-text rule for <img> elements
       "react/no-unescaped-entities": "off", // Disable unescaped entities warning
       "react-hooks/exhaustive-deps": "off", // Disable exhaustive deps rule for useEffect
+      "no-console": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+      "@typescript-eslint/no-namespace": "off",
+      "@typescript-eslint/no-var-requires": "off",
     },
   },
 ];

@@ -10,7 +10,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { redirect } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,9 +26,9 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { fetchCurrentUser } from "@/lib/api";
 
-const Header = async () => {
-  const [user, setUser] = useState<any>({});
-  const [isLoading, setIsLoading] = useState(false);
+const Header = () => {
+  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const today = new Date();
   const router = useRouter();
 
@@ -40,13 +39,15 @@ const Header = async () => {
       const data: any = await fetchCurrentUser();
       if (!data) {
         console.log(`NOT`);
-        redirect("/auth/sign-in");
+        router.push("/auth/sign-in");
       } else {
         setUser(data);
         console.log(`FETCH DONE`);
       }
     } catch (error) {
       console.log("Error fetching current user:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -74,8 +75,10 @@ const Header = async () => {
             {dateFormat}
           </p>
           <div className="text-2xl text-[var(--foreground)] font-regular -mt-2 flex">
-            Welcome back,&nbsp;
-            <strong className="text-[var(--chart-3)]">{user.data.name}</strong>
+            Өдрийн мэнд,&nbsp;
+            <strong className="text-[var(--chart-3)]">
+              {user?.data?.name ?? "Guest"}
+            </strong>
           </div>
         </div>
         <div className="flex h-full justify-end items-center flex-row gap-6">
@@ -135,7 +138,7 @@ const Header = async () => {
           <hr className="border-t-0 border-r-1 border-[var(--sidebar-ring)] h-2/4" />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Profile user={user.data} />
+              <Profile user={user?.data ?? {}} />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48 dark mt-2">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>

@@ -3,8 +3,7 @@
 import { cookies } from "next/headers";
 import axios from "axios";
 
-// GET API URL
-const API_URL = process.env.API_URL;
+const API_URL = process.env.API_URL || "http://localhost:4000";
 
 export async function fetchCurrentUser() {
   try {
@@ -77,9 +76,12 @@ export async function deleteOrder({ orderId }: { orderId: string }) {
   }
 
   try {
-    const res = await axios.delete(`${API_URL}api/food/food-order/${orderId}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await axios.delete(
+      `${API_URL}/api/food/food-order/${orderId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return res.data;
   } catch (err) {
     console.error("Error deleting order:", err);
@@ -252,9 +254,11 @@ export async function createCategory({ name }: { name: string }) {
   }
 
   try {
-    const res = await axios.post(`${API_URL}/api/food/food-category}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await axios.post(
+      `${API_URL}/api/food/food-category`,
+      { name },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
     return res.data;
   } catch (err) {
     console.error("Error deleting order:", err);
@@ -271,7 +275,7 @@ export async function editCategory({ id, name }: { id: string; name: string }) {
 
   try {
     const res = await axios.patch(
-      `${API_URL}/api/food/food-category${id}`,
+      `${API_URL}/api/food/food-category/${id}`,
       {
         name,
       },
@@ -294,7 +298,7 @@ export async function deleteCategory({ id }: { id: string }) {
   }
 
   try {
-    const res = await axios.delete(`${API_URL}/api/food/food-category${id}}`, {
+    const res = await axios.delete(`${API_URL}/api/food/food-category/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     return res.data;
