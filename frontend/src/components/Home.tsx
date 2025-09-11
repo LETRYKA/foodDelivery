@@ -43,7 +43,7 @@ const HomeWeb = (props: any) => {
             plugins={[
               Autoplay({
                 delay: 3000,
-              }),
+              }) as any,
             ]}
             className="w-full lg:w-7/10 xl:9/10"
           >
